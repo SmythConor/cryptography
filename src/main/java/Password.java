@@ -1,4 +1,5 @@
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 class Password {
 	private String pass;
@@ -12,23 +13,38 @@ class Password {
 		this.pass = pass;
 	}
 
+	public Password(String pass, BigInteger salt) {
+		this.pass = pass;
+		this.salt = salt;
+	}
+
+	public void setPassword(String pass) {
+		this.pass = pass;
+	}
+
+	public String getPassword() {
+		return this.pass;
+	}
+
 	public void setSalt(BigInteger salt) {
 		this.salt = salt;
 	}
 
-	public void getPassword() {
+	public BigInteger getSalt() {
+		return this.salt;
+	}
+
+	public String getSaltPassword() {
 		String password = pass + salt.toString();
+
 		byte[] bytePassword = new byte[0];
 
 		try {
-			bytePassword = p.getBytes("UTF-8");
+			bytePassword = password.getBytes(StandardCharsets.UTF_8);
 		} catch(Exception e) {
-
-		}
-		for(byte b : bytePassword) {
-			System.out.print(b);
+			System.out.println("Error with getSaltPassword");
 		}
 
-		System.out.println();
+		return password;
 	}
 }

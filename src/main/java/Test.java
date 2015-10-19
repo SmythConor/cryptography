@@ -6,6 +6,8 @@ class Test {
 		BigInteger salt = SaltGenerator.generateSalt(bits);
 		Password p = new Password();
 		p.setSalt(salt);
-		p.getPassword();
+		try {
+			HashPassword.hashPassword(p.getPassword());
+		} catch (Exception e) {}
 	}
 }
