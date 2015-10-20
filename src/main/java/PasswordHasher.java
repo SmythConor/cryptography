@@ -6,7 +6,7 @@ import javax.xml.bind.DatatypeConverter;
 class PasswordHasher {
 	private static final String HASH = "SHA-256";
 
-	public static void hashPassword(String password) {
+	public static byte[] hashPassword(String password) {
 		MessageDigest messageDigest = null;
 		
 		try {
@@ -16,13 +16,16 @@ class PasswordHasher {
 		}
 
 		messageDigest.update(password.getBytes());
+		byte[] digest = null;
 
 		for(int hashCounter = 0; hashCounter < 200; hashCounter++) {
-			byte[] digest = messageDigest.digest();
+			digest = messageDigest.digest();
 
-			PrintUtils.printStringAsHex(digest);
+			System.out.println(PrintUtils.bytesAsString(digest));
 
 			messageDigest.update(digest);
 		}
+
+		return digest;
 	}
 }

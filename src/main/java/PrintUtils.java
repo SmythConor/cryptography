@@ -1,7 +1,9 @@
+import java.math.BigInteger;
+
 class PrintUtils {
 
-	public static void printStringAsHex(byte[] bytes) {
-		System.out.println(String.format("%064x", new java.math.BigInteger(1, bytes)));
+	public static String bytesAsString(byte[] bytes) {
+		return String.format("%064x", new BigInteger(1, bytes));
 	}
 	
 	public static void printByteArray(byte[] bytes) {
