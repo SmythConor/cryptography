@@ -1,13 +1,14 @@
 import java.math.BigInteger;
 
 class Test {
+	private static final BITS = 128;
+
 	public static void main(String[] args) {
-		int bits = 128;
-		BigInteger salt = KeyGenerator.generateKey(bits);
+		BigInteger salt = KeyGenerator.generateKey(BITS);
+
 		Password p = new Password();
 		p.setSalt(salt);
-		try {
-			HashPassword.hashPassword(p.getSaltPassword());
-		} catch (Exception e) {}
+
+		PasswordHasher.hashPassword(p.getSaltPassword());
 	}
 }
