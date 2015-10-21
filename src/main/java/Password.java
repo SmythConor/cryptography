@@ -1,5 +1,5 @@
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class Password {
 	private String pass;
@@ -34,16 +34,12 @@ class Password {
 		return this.salt;
 	}
 
+	/**
+	 * Get the password concat with the salt for the password
+	 * @return String password concatenated with the salt
+	 */
 	public String getSaltPassword() {
 		String password = pass + salt.toString();
-
-		byte[] bytePassword = new byte[0];
-
-		try {
-			bytePassword = password.getBytes(StandardCharsets.UTF_8);
-		} catch(Exception e) {
-			System.out.println("Error with getSaltPassword");
-		}
 
 		return password;
 	}

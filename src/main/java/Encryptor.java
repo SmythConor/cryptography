@@ -11,6 +11,7 @@ class Encryptor {
 	private static final String CIPHER_TYPE = "AES";
 	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
 
+	/* initialise Cipher with the key supplied */
 	private static Cipher initialiseCipher(byte[] encryptionKey) {
 		Cipher c = null;
 		try {
@@ -62,7 +63,8 @@ class Encryptor {
 		System.out.println(PrintUtils.bytesAsString(encryptedData));
 		return cipher;
 	}
-	
+
+	/* Encrypt the file with given cipher and data as byte array */
 	private static byte[] encrypt(Cipher cipher, byte[] dataToWrite) {
 		try {
 			return cipher.doFinal(dataToWrite);
@@ -75,10 +77,12 @@ class Encryptor {
 		}
 	}
 
+	/* Generate an IV */
 	private static byte[] getIntialisationVector() {
 		return KeyGenerator.generateKey(STD_BITS).toByteArray();
 	}
 
+	/* Update java security defaults to allow for 256 key size */
 	private static void updateKeyLimit() {
 		try {
 			Field field = Class.forName("javax.crypto.JceSecurity").
@@ -92,6 +96,7 @@ class Encryptor {
 		}
 	}
 
+	/* exit method to exit program if exception caught */
 	private static void exit() {
 		System.out.println("Exiting.");
 		System.exit(0);

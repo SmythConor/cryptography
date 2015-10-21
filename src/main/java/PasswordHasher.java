@@ -6,9 +6,14 @@ import javax.xml.bind.DatatypeConverter;
 class PasswordHasher {
 	private static final String HASH = "SHA-256";
 
+	/**
+	 * Hash Password 200 times using SHA-256 algorithm
+	 * @param password Password to hash as a String
+	 * @return byte[] with 256 bit password hashed
+	 */
 	public static byte[] hashPassword(String password) {
 		MessageDigest messageDigest = null;
-		
+
 		try {
 			messageDigest = MessageDigest.getInstance(HASH);
 		} catch(Exception e) {

@@ -3,6 +3,10 @@ import java.io.PrintWriter;
 class PrintWriterFacade {
 	private PrintWriter writer;
 
+	/**
+	 * Default constructor for printwriter
+	 * @param file Name of the file as a String
+	 */
 	public PrintWriterFacade(String file) {
 		try {
 			writer = new PrintWriter(file);
@@ -12,13 +16,25 @@ class PrintWriterFacade {
 		}
 	}
 
+	/**
+	 * Write the message supplied to file
+	 * @param message String to write to file
+	 */
 	public void write(String message) {
 		writer.print(message);
 	}
+
+	/**
+	 * Write the message supplied to file on new line
+	 * @param message String to write to file
+	 */
 	public void writeLine(String message) {
 		writer.println(message);
 	}
 
+	/**
+	 * Close printwriter
+	 */
 	public void close() {
 		writer.close();
 	}
