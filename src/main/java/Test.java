@@ -13,17 +13,20 @@ import java.util.BitSet;
 ////pad with if 1011 is final block make it 10111000000etc
 ////if full pad with new block 1000000000000etc
 
+//check number of bits short, flip index d
+
 @SuppressWarnings("unchecked")
 class Test {
 	private static final int BITS = 128;
 	private static final String FILE = "../src/main/java/keys";
 
 	public static void main(String[] args) {
+		System.out.println(Integer.toBinaryString(128));
 		PrintWriterFacade writer = new PrintWriterFacade(FILE);
 
 		/* Generate Salt and write to file */
 		BigInteger salt = KeyGenerator.generateKey(BITS);
-		writer.writeLine("Salt: " + salt);
+		writer.writeLine("Salt: " + PrintUtils.bytesAsString(salt.toByteArray()));
 
 		/* Generate Password, add salt and write to file */
 		Password p = new Password();

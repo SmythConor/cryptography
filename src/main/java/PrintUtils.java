@@ -1,9 +1,10 @@
 import java.math.BigInteger;
+import javax.xml.bind.DatatypeConverter;
 
 class PrintUtils {
 
 	public static String bytesAsString(byte[] bytes) {
-		return String.format("%064x", new BigInteger(1, bytes));
+		return DatatypeConverter.printHexBinary(bytes).toLowerCase();
 	}
 	
 	public static void printByteArray(byte[] bytes) {

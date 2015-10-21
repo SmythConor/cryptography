@@ -48,6 +48,14 @@ class Encryptor {
 			encryptedData = encrypt(cipher, dataToWrite);
 		} else {
 			//pad
+			int bitsToPad = (dataToWrite.length * 8) % 128;
+
+			String firstBit = Integer.toBinaryString(1);
+			String lastBits = String.format("%" + bitsToPad + "s", "0");
+			String padding = firstBit + lastBits;
+			byte[] pad = padding.getBytes(UTF_8);
+			//System.out.println(PrintUtils.bytesAsString(pad));
+
 			encryptedData = encrypt(cipher, dataToWrite);
 		}
 

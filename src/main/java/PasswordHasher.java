@@ -21,8 +21,6 @@ class PasswordHasher {
 		for(int hashCounter = 0; hashCounter < 200; hashCounter++) {
 			digest = messageDigest.digest();
 
-			//System.out.println(PrintUtils.bytesAsString(digest));
-
 			messageDigest.update(digest);
 		}
 
