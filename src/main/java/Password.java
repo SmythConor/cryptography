@@ -48,4 +48,14 @@ class Password {
 
 		return password;
 	}
+
+	public BigInteger pow(int e) {
+		//password to the power of e
+		return salt;
+	}
+
+	public BigInteger mod(int n) {
+		//
+		return salt;
+	}
 }

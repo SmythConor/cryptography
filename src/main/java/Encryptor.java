@@ -17,7 +17,7 @@ class Encryptor {
 	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
 
 	/* initialise Cipher with the key supplied */
-	private static Cipher initialiseCipher(byte[] encryptionKey) {
+	private static Cipher initialiseCipher(int mode, byte[] encryptionKey) {
 		Cipher c = null;
 		try {
 			c = Cipher.getInstance(CIPHER_INSTANCE);
@@ -45,32 +45,31 @@ class Encryptor {
 	}
 
 	public static Cipher encryptFile(byte[] encryptionKey, byte[] dataToEncrypt) {
-		Cipher cipher = initialiseCipher(encryptionKey);
+		Cipher cipher = initialiseCipher(Cipher.ENCRYPT_MODE, encryptionKey);
 
-		byte[] dataToWrite = dataToEncrypt;//.getBytes(UTF_8);
+		byte[] dataToWrite = dataToEncrypt;
 		byte[] encryptedData = null;
 
+		//if message if less than block size finish block with 1000...
+		//if message is the same as block size add block 1000000000....
 		if(dataToWrite.length % 16 == 0) {
-			encryptedData = encrypt(cipher, dataToWrite);
+			System.out.println("Data before: " + dataToWrite.length + " " + PrintUtils.bytesAsString(dataToWrite));
+			applyPadding(dataToWrite);
+			System.out.println("Data after: " + dataToWrite.length + " " + PrintUtils.bytesAsString(dataToWrite));
+			encryptedData = encryptFile(cipher, dataToWrite);
 		} else {
-			//pad
-			int bitsToPad = (dataToWrite.length * 8) % 128;
-
-			String firstBit = Integer.toBinaryString(1);
-			String lastBits = String.format("%" + bitsToPad + "s", "0");
-			String padding = firstBit + lastBits;
-			byte[] pad = padding.getBytes(UTF_8);
-			//System.out.println(PrintUtils.bytesAsString(pad));
-
-			encryptedData = encrypt(cipher, dataToWrite);
+			System.out.println("Data before: " + PrintUtils.bytesAsString(dataToWrite));
+			dataToWrite = applyPadding(dataToWrite);
+			System.out.println("Data after: " + PrintUtils.bytesAsString(dataToWrite));
+			encryptedData = encryptFile(cipher, dataToWrite);
 		}
 
-		System.out.println(PrintUtils.bytesAsString(encryptedData));
+		System.out.println("Encrypted Data: " + PrintUtils.bytesAsString(encryptedData));
 		return cipher;
 	}
 
 	/* Encrypt the file with given cipher and data as byte array */
-	private static byte[] encrypt(Cipher cipher, byte[] dataToWrite) {
+	private static byte[] encryptFile(Cipher cipher, byte[] dataToWrite) {
 		try {
 			return cipher.doFinal(dataToWrite);
 		} catch(Exception e) {
@@ -80,6 +79,24 @@ class Encryptor {
 
 			return null;
 		}
+	}
+
+	private static byte[] applyPadding(byte[] dataToPad) {
+		if(dataToPad.length % 16 == 0) {
+			byte padding = (byte) Integer.parseInt("1000000", 2);
+
+			byte[] pad = {padding};
+			byte[] paddedData = new byte[dataToPad.length + pad.length];
+
+			System.arraycopy(dataToPad, 0, paddedData, 0, dataToPad.length);
+			System.arraycopy(pad, 0, paddedData, dataToPad.length, pad.length);
+
+			System.out.println(PrintUtils.bytesAsString(pad));
+
+			return paddedData;
+		}
+
+		return dataToPad;
 	}
 
 	/* Generate an IV */

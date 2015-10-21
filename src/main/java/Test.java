@@ -21,7 +21,6 @@ class Test {
 	private static final String FILE = "../src/main/java/keys";
 
 	public static void main(String[] args) {
-		System.out.println(Integer.toBinaryString(128));
 		PrintWriterFacade writer = new PrintWriterFacade(FILE);
 
 		/* Generate Salt and write to file */
@@ -39,59 +38,15 @@ class Test {
 		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
 
 		/* Message to encrypt */
-		String message = "hello";
-		//BigInteger message = KeyGenerator.generateKey();
+		BigInteger me = KeyGenerator.generateKey(128);
+		byte[] ll = new byte[16];
 
 		/* Create Cipher; to be changed to just encrpyt file */
-		Cipher cipher = Encryptor.encryptFile(hashedPassword, message.getBytes(UTF_8));
+		Cipher cipher = Encryptor.encryptFile(hashedPassword, ll);
 
 		byte[] iv = cipher.getIV();
-		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv));
-
-		if(false) {//dataToWrite.length * 8 % 128 == 0) {
-			byte[] encrypted = null;
-			byte[] dataToWrite = null;
-			try {
-				encrypted = cipher.doFinal(dataToWrite);
-			} catch(Exception e) {
-				System.out.println("Error encrypting message");
-				e.printStackTrace();
-			}
-
-			System.out.println(PrintUtils.bytesAsString(encrypted));
-		} 
-		
-		/* Messing with combining padding */
-		else if(false) {
-			byte[] dataToWrite = null;
-			System.out.println((dataToWrite.length * 8) % 128);
-			int i = (dataToWrite.length * 8) % 128;
-			BitSet b = new BitSet(i);
-			b.set(i - 1);
-			byte[] l = b.toByteArray();
-			System.out.println("Needs padding");
-			byte[] k = "Hello my name is conor".getBytes();
-			byte[] inter = new byte[k.length + l.length];
-			System.arraycopy(l, 0, inter, 0, l.length);
-			System.arraycopy(k, 0, inter, l.length, k.length);
-			System.out.println(inter.length);
-			try {
-				byte[] encrypted = 	cipher.doFinal(inter);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			//System.out.println("Padding needed");
-		}
+		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 
 		writer.close();
-	}
-	
-	/* Messing with padding */
-	public static void getB() {
-		BitSet b = new BitSet(8);
-		b.flip(7);
-		b.set(7);
-		System.out.println(b);
 	}
 }
