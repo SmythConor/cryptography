@@ -40,7 +40,7 @@ class Test {
 		//BigInteger message = KeyGenerator.generateKey();
 
 		/* Create Cipher; to be changed to just encrpyt file */
-		Cipher cipher = Encryptor.encryptFile(hashedPassword, message.getBytes());
+		Cipher cipher = Encryptor.encryptFile(hashedPassword, message.getBytes(UTF_8));
 
 		byte[] iv = cipher.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv));

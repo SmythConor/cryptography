@@ -48,10 +48,10 @@ class Encryptor {
 			encryptedData = encrypt(cipher, dataToWrite);
 		} else {
 			//pad
-			//byte[] encryptedData = encrypt(cipher, dataToWrite);
+			encryptedData = encrypt(cipher, dataToWrite);
 		}
 
-		//System.out.println(PrintUtils.bytesAsString(encryptedData));
+		System.out.println(PrintUtils.bytesAsString(encryptedData));
 		return cipher;
 	}
 	
