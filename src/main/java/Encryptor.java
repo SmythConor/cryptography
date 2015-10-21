@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.lang.reflect.Field;
 import javax.crypto.Cipher;
 import java.security.Key;
@@ -16,19 +17,22 @@ class Encryptor {
 		} catch(Exception e) {
 			System.out.println("Error creating instance of cipher " + CIPHER_INSTANCE);
 			e.printStackTrace();
+			exit();
 		}
 
 		byte[] iv = getIntialisationVector();
+		System.out.println(iv.length);
 
 		Key cipherKey = new SecretKeySpec(encryptionKey, CIPHER_TYPE);
 
 		updateKeyLimit();
 
 		try {
-			c.init(Cipher.ENCRYPT_MODE, cipherKey, new IvParameterSpec(iv));
+			c.init(Cipher.ENCRYPT_MODE, cipherKey, new IvParameterSpec(iv, 1, iv.length - 1));
 		} catch(Exception e) {
 			System.out.println("Error initialising cipher");
 			e.printStackTrace();
+			exit();
 		}
 
 		return c;
@@ -38,6 +42,7 @@ class Encryptor {
 		Cipher cipher = initialiseCipher(encryptionKey);
 		return cipher;
 	}
+
 
 	private static byte[] getIntialisationVector() {
 		return KeyGenerator.generateKey(STD_BITS).toByteArray();
@@ -52,6 +57,12 @@ class Encryptor {
 		} catch(Exception e) {
 			System.out.println("Error modifying Security limit");
 			e.printStackTrace();
+			exit();
 		}
+	}
+
+	private static void exit() {
+		System.out.println("Exiting.");
+		System.exit(0);
 	}
 }

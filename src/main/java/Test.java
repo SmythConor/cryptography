@@ -1,5 +1,4 @@
 import java.math.BigInteger;
-import java.io.PrintWriter;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
@@ -24,6 +23,7 @@ class Test {
 
 		/* Generate Salt and write to file */
 		BigInteger salt = KeyGenerator.generateKey(BITS);
+		System.out.println(salt.toByteArray().length);
 		writer.writeLine("Salt: " + salt);
 
 		/* Generate Password, add salt and write to file */
@@ -36,19 +36,18 @@ class Test {
 		byte[] hashedPassword = PasswordHasher.hashPassword(p.getSaltPassword());
 		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
 
-		/* Generate IV and write to file */
-		BigInteger iv = KeyGenerator.generateKey(BITS);
-		writer.writeLine("IV: " + iv);
-
 		/* Message to encrypt */
-		String message = "message";
+		String message = "me";
 
 		byte dataToWrite[] = message.getBytes(StandardCharsets.UTF_8);
 
 		/* Create Cipher; to be changed to just encrpyt file */
 		Cipher cipher = Encryptor.encryptFile(hashedPassword);
 
-		if((dataToWrite.length * 8) % 128 == 0) {
+		byte[] iv = cipher.getIV();
+		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv));
+
+		if(dataToWrite.length * 8 % 128 == 0) {
 			byte[] encrypted = null;
 			try {
 				encrypted = cipher.doFinal(dataToWrite);
