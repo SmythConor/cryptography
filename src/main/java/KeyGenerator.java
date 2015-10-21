@@ -33,7 +33,7 @@ class KeyGenerator {
 
 		do {
 			i = generateBits(bits);
-		} while(i.bitLength() != 128);
+		} while(i.bitLength() != bits);
 
 		return i;
 	}
