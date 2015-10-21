@@ -4,6 +4,7 @@ import javax.crypto.Cipher;
 import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class Encryptor {
 	private static final int STD_BITS = 128;
@@ -21,7 +22,6 @@ class Encryptor {
 		}
 
 		byte[] iv = getIntialisationVector();
-		System.out.println(iv.length);
 
 		Key cipherKey = new SecretKeySpec(encryptionKey, CIPHER_TYPE);
 
@@ -38,11 +38,34 @@ class Encryptor {
 		return c;
 	}
 
-	public static Cipher encryptFile(byte[] encryptionKey) {
+	public static Cipher encryptFile(byte[] encryptionKey, byte[] dataToEncrypt) {
 		Cipher cipher = initialiseCipher(encryptionKey);
+
+		byte[] dataToWrite = dataToEncrypt;//.getBytes(UTF_8);
+		byte[] encryptedData = null;
+
+		if(dataToWrite.length % 16 == 0) {
+			encryptedData = encrypt(cipher, dataToWrite);
+		} else {
+			//pad
+			//byte[] encryptedData = encrypt(cipher, dataToWrite);
+		}
+
+		//System.out.println(PrintUtils.bytesAsString(encryptedData));
 		return cipher;
 	}
+	
+	private static byte[] encrypt(Cipher cipher, byte[] dataToWrite) {
+		try {
+			return cipher.doFinal(dataToWrite);
+		} catch(Exception e) {
+			System.out.println("Error encrypting data");
+			e.printStackTrace();
+			exit();
 
+			return null;
+		}
+	}
 
 	private static byte[] getIntialisationVector() {
 		return KeyGenerator.generateKey(STD_BITS).toByteArray();

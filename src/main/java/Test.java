@@ -1,6 +1,6 @@
 import java.math.BigInteger;
 import java.io.FileOutputStream;
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import javax.crypto.Cipher;
 import java.util.BitSet;
 
@@ -23,7 +23,6 @@ class Test {
 
 		/* Generate Salt and write to file */
 		BigInteger salt = KeyGenerator.generateKey(BITS);
-		System.out.println(salt.toByteArray().length);
 		writer.writeLine("Salt: " + salt);
 
 		/* Generate Password, add salt and write to file */
@@ -37,18 +36,18 @@ class Test {
 		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
 
 		/* Message to encrypt */
-		String message = "me";
-
-		byte dataToWrite[] = message.getBytes(StandardCharsets.UTF_8);
+		String message = "hello";
+		//BigInteger message = KeyGenerator.generateKey();
 
 		/* Create Cipher; to be changed to just encrpyt file */
-		Cipher cipher = Encryptor.encryptFile(hashedPassword);
+		Cipher cipher = Encryptor.encryptFile(hashedPassword, message.getBytes());
 
 		byte[] iv = cipher.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv));
 
-		if(dataToWrite.length * 8 % 128 == 0) {
+		if(false) {//dataToWrite.length * 8 % 128 == 0) {
 			byte[] encrypted = null;
+			byte[] dataToWrite = null;
 			try {
 				encrypted = cipher.doFinal(dataToWrite);
 			} catch(Exception e) {
@@ -61,6 +60,7 @@ class Test {
 		
 		/* Messing with combining padding */
 		else if(false) {
+			byte[] dataToWrite = null;
 			System.out.println((dataToWrite.length * 8) % 128);
 			int i = (dataToWrite.length * 8) % 128;
 			BitSet b = new BitSet(i);
@@ -78,7 +78,7 @@ class Test {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("Padding needed");
+			//System.out.println("Padding needed");
 		}
 
 		writer.close();
