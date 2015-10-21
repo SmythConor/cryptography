@@ -1,6 +1,11 @@
 import java.math.BigInteger;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+* @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+* @since 2015-10-19
+* All work is my own
+*/
 class Password {
 	private String pass;
 	private BigInteger salt;

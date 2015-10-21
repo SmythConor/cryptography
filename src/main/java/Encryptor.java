@@ -6,6 +6,11 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+* @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+* @since 2015-10-20
+* All work is my own
+*/
 class Encryptor {
 	private static final int STD_BITS = 128;
 	private static final String CIPHER_TYPE = "AES";

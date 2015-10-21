@@ -3,6 +3,11 @@ import java.nio.charset.StandardCharsets;
 import java.math.BigInteger;
 import javax.xml.bind.DatatypeConverter;
 
+/**
+* @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+* @since 2015-10-19
+* All work is my own
+*/
 class PasswordHasher {
 	private static final String HASH = "SHA-256";
 
