@@ -5,12 +5,10 @@ import javax.crypto.Cipher;
 //Concat password and slat done 
 //Hash 200 times = key (k) done 
 //generate IV(128-bit) done
-//encrypt file using (k) with block size 128-bit
+//encrypt file using (k) with block size 128-bit done
 ////use IV encryption of 128-bit generated
 ////pad with if 1011 is final block make it 10111000000etc
 ////if full pad with new block 1000000000000etc
-
-//check number of bits short, flip index d
 
 class Test {
 	private static final int BITS = 128;
@@ -36,10 +34,14 @@ class Test {
 		/* Message to encrypt */
 		ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src/main/java/binf");
 		String file = "";
+
 		while(scanner.hasNext()) {
 			file += scanner.next();
 		}
+
 		scanner.close();
+
+		
 		byte[] dataToEncrypt = file.getBytes();
 
 		/* Create Cipher; to be changed to just encrpyt file */

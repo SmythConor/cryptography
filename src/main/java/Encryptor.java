@@ -35,7 +35,7 @@ class Encryptor {
 		updateKeyLimit();
 
 		try {
-			c.init(Cipher.ENCRYPT_MODE, cipherKey, new IvParameterSpec(iv, 1, iv.length - 1));
+			c.init(mode, cipherKey, new IvParameterSpec(iv, 1, iv.length - 1));
 		} catch(Exception e) {
 			System.out.println("Error initialising cipher");
 			e.printStackTrace();
@@ -51,7 +51,6 @@ class Encryptor {
 		dataToEncrypt = Padder.applyPadding(dataToEncrypt);
 
 		byte[] encryptedData = executeCipher(cipher, dataToEncrypt);
-		System.out.println(PrintUtils.bytesAsString(encryptedData));
 
 		return cipher;
 	}
@@ -80,6 +79,10 @@ class Encryptor {
 		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
 
 		System.out.println(encryptedData);
+	}
+	
+	private static BigInteger modPow(BigInteger exponent, BigInteger modulus) {
+		return null;
 	}
 
 	public static BigInteger tempRsaEncrypt(String password) {
