@@ -1,8 +1,5 @@
 import java.math.BigInteger;
-import java.io.FileOutputStream;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import javax.crypto.Cipher;
-import java.util.BitSet;
 
 //Password + salt(128-bit) done
 //Concat password and slat done 
@@ -37,10 +34,16 @@ class Test {
 		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
 
 		/* Message to encrypt */
-		byte[] ll = "Hello my name is conor".getBytes();
+		ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src/main/java/binf");
+		String file = "";
+		while(scanner.hasNext()) {
+			file += scanner.next();
+		}
+		scanner.close();
+		byte[] dataToEncrypt = file.getBytes();
 
 		/* Create Cipher; to be changed to just encrpyt file */
-		Cipher cipher = Encryptor.encryptFile(hashedPassword, ll);
+		Cipher cipher = Encryptor.encryptFile(hashedPassword, dataToEncrypt);
 
 		byte[] iv = cipher.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);

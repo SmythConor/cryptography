@@ -51,6 +51,7 @@ class Encryptor {
 		dataToEncrypt = Padder.applyPadding(dataToEncrypt);
 
 		byte[] encryptedData = executeCipher(cipher, dataToEncrypt);
+		System.out.println(PrintUtils.bytesAsString(encryptedData));
 
 		return cipher;
 	}
