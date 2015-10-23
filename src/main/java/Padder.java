@@ -13,12 +13,14 @@ class Padder {
 	 * @return byte[] with padded data
 	 */
 	public static byte[] applyPadding(byte[] dataToPad) {
-		if(dataToPad.length % BLOCK_SIZE == 0) {
-			byte[] padding = createPadding(BLOCK_SIZE);
-		} else {
-			int bytesToPad = BLOCK_SIZE - dataToPad.length;
+	byte[] padding = null;
 
-			byte[] padding = createPadding(bytesToPad);
+		if(dataToPad.length % BLOCK_SIZE == 0) {
+			padding = createPadding(BLOCK_SIZE);
+		} else {
+			int bytesToPad = BLOCK_SIZE - dataToPad.length % 16;
+
+			padding = createPadding(bytesToPad);
 		}
 
 		byte[] paddedData = new byte[dataToPad.length + padding.length];

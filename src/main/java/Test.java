@@ -37,12 +37,7 @@ class Test {
 		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
 
 		/* Message to encrypt */
-		BigInteger me = KeyGenerator.generateKey(128);
-		byte[] temp = me.toByteArray();
-		byte[] ll = new byte[16];
-		for(int i = 1; i < ll.length - 1; i++) {
-			ll[i] = temp[i];
-		}
+		byte[] ll = "Hello my name is conor".getBytes();
 
 		/* Create Cipher; to be changed to just encrpyt file */
 		Cipher cipher = Encryptor.encryptFile(hashedPassword, ll);
@@ -50,8 +45,8 @@ class Test {
 		byte[] iv = cipher.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 
-		BigInteger result = Encryptor.tempRsaEncrypt(p.getPassword());
-		Encryptor.rsaEncrypt(p.getPassword());
+		//BigInteger result = Encryptor.tempRsaEncrypt(p.getPassword());
+		//Encryptor.rsaEncrypt(p.getPassword());
 
 		writer.close();
 	}

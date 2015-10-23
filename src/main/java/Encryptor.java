@@ -48,12 +48,9 @@ class Encryptor {
 	public static Cipher encryptFile(byte[] encryptionKey, byte[] dataToEncrypt) {
 		Cipher cipher = initialiseCipher(ENCRYPT_MODE, encryptionKey);
 
-		System.out.println("Data before: " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
 		dataToEncrypt = Padder.applyPadding(dataToEncrypt);
-		System.out.println("Data after : " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
 
 		byte[] encryptedData = executeCipher(cipher, dataToEncrypt);
-		System.out.println("Encrypted Data: " + PrintUtils.bytesAsString(encryptedData));
 
 		return cipher;
 	}
