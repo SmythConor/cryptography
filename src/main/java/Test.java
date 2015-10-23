@@ -1,14 +1,5 @@
 import java.math.BigInteger;
-import javax.crypto.Cipher;
-
-//Password + salt(128-bit) done
-//Concat password and slat done 
-//Hash 200 times = key (k) done 
-//generate IV(128-bit) done
-//encrypt file using (k) with block size 128-bit done
-////use IV encryption of 128-bit generated
-////pad with if 1011 is final block make it 10111000000etc
-////if full pad with new block 1000000000000etc
+import static javax.crypto.Cipher.ENCRYPT_MODE;
 
 class Test {
 	private static final int BITS = 128;
@@ -28,8 +19,8 @@ class Test {
 		writer.writeLine("Salted Password: " + p.getSaltPassword());
 
 		/* Hash Password and write to file */
-		byte[] hashedPassword = PasswordHasher.hashPassword(p.getSaltPassword());
-		writer.writeLine("Hashed Password: " + PrintUtils.bytesAsString(hashedPassword) + " Number of bits: " + hashedPassword.length * 8);
+		byte[] encryptionKey = PasswordHasher.hashPassword(p.getSaltPassword());
+		writer.writeLine("Encryption Key: " + PrintUtils.bytesAsString(encryptionKey) + " Number of bits: " + encryptionKey.length * 8);
 
 		/* Message to encrypt */
 		ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src/main/java/binf");
@@ -40,14 +31,14 @@ class Test {
 		}
 
 		scanner.close();
-
 		
 		byte[] dataToEncrypt = file.getBytes();
 
-		/* Create Cipher; to be changed to just encrpyt file */
-		Cipher cipher = Encryptor.encryptFile(hashedPassword, dataToEncrypt);
+		/* Create encryptor to encrypt the data */
+		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
+		encryptor.encrypt(dataToEncrypt);
 
-		byte[] iv = cipher.getIV();
+		byte[] iv = encryptor.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 
 		//BigInteger result = Encryptor.tempRsaEncrypt(p.getPassword());

@@ -4,23 +4,22 @@
  * All work is my own
  */
 class Padder {
-	private static final int BLOCK_SIZE = 16;
-
 	/**
 	 * Apply Padding to data supplied
 	 * Default block size is 128-bits
+	 * @param blockSize size of the blocks
 	 * @param dataToPad Data to be padded
 	 * @return byte[] with padded data
 	 */
-	public static byte[] applyPadding(byte[] dataToPad) {
-	byte[] padding = null;
-
-		if(dataToPad.length % BLOCK_SIZE == 0) {
-			padding = createPadding(BLOCK_SIZE);
+	public static byte[] applyPadding(int blockSize, byte[] dataToPad) {
+		byte[] padding = null;
+		int byteCount = dataToPad.length % blockSize;
+		if(byteCount == 0) {
+			padding = createPadding(blockSize, byteCount);
 		} else {
-			int bytesToPad = BLOCK_SIZE - dataToPad.length % 16;
+			int bytesToPad = blockSize - byteCount;
 
-			padding = createPadding(bytesToPad);
+			padding = createPadding(blockSize, bytesToPad);
 		}
 
 		byte[] paddedData = new byte[dataToPad.length + padding.length];
@@ -32,9 +31,9 @@ class Padder {
 	}
 
 	/* Create block of padding */
-	private static byte[] createPadding(int bytes) {
+	private static byte[] createPadding(int blockSize, int bytes) {
 		if(bytes == 0) {
-			bytes = BLOCK_SIZE;
+			bytes = blockSize;
 		}
 
 		byte[] padding = new byte[bytes];
