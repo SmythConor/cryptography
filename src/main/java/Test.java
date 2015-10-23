@@ -50,6 +50,9 @@ class Test {
 		byte[] iv = cipher.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 
+		BigInteger result = Encryptor.tempRsaEncrypt(p.getPassword());
+		Encryptor.rsaEncrypt(p.getPassword());
+
 		writer.close();
 	}
 }
