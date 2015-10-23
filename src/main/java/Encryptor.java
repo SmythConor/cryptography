@@ -14,7 +14,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 class Encryptor {
 	private static final int STD_BITS = 128;
 	private static final String CIPHER_TYPE = "AES";
-	private static final String CIPHER_INSTANCE = "AES/CBC/PKCS5Padding";
+	private static final String CIPHER_INSTANCE = "AES/CBC/NoPadding";
 
 	/* initialise Cipher with the key supplied */
 	private static Cipher initialiseCipher(int mode, byte[] encryptionKey) {
@@ -47,24 +47,13 @@ class Encryptor {
 	public static Cipher encryptFile(byte[] encryptionKey, byte[] dataToEncrypt) {
 		Cipher cipher = initialiseCipher(Cipher.ENCRYPT_MODE, encryptionKey);
 
-		byte[] dataToWrite = dataToEncrypt;
-		byte[] encryptedData = null;
+		System.out.println("Data before: " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
+		dataToEncrypt = Padder.applyPadding(dataToEncrypt);
+		System.out.println("Data after : " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
 
-		//if message if less than block size finish block with 1000...
-		//if message is the same as block size add block 1000000000....
-		if(dataToWrite.length % 16 == 0) {
-			System.out.println("Data before: " + dataToWrite.length + " " + PrintUtils.bytesAsString(dataToWrite));
-			applyPadding(dataToWrite);
-			System.out.println("Data after: " + dataToWrite.length + " " + PrintUtils.bytesAsString(dataToWrite));
-			encryptedData = encryptFile(cipher, dataToWrite);
-		} else {
-			System.out.println("Data before: " + PrintUtils.bytesAsString(dataToWrite));
-			dataToWrite = applyPadding(dataToWrite);
-			System.out.println("Data after: " + PrintUtils.bytesAsString(dataToWrite));
-			encryptedData = encryptFile(cipher, dataToWrite);
-		}
-
+		byte[] encryptedData = encryptFile(cipher, dataToEncrypt);
 		System.out.println("Encrypted Data: " + PrintUtils.bytesAsString(encryptedData));
+
 		return cipher;
 	}
 
@@ -74,7 +63,7 @@ class Encryptor {
 			return cipher.doFinal(dataToWrite);
 		} catch(Exception e) {
 			System.out.println("Error encrypting data");
-			e.printStackTrace();
+			//e.printStackTrace();
 			exit();
 
 			return null;
@@ -82,21 +71,38 @@ class Encryptor {
 	}
 
 	private static byte[] applyPadding(byte[] dataToPad) {
+		byte[] paddedData = dataToPad;
 		if(dataToPad.length % 16 == 0) {
-			byte padding = (byte) Integer.parseInt("1000000", 2);
+		} else {
+			int bytesToPad = dataToPad.length % 16;
+			int bitsToPad = (dataToPad.length * 8) % 128;
 
-			byte[] pad = {padding};
-			byte[] paddedData = new byte[dataToPad.length + pad.length];
-
-			System.arraycopy(dataToPad, 0, paddedData, 0, dataToPad.length);
-			System.arraycopy(pad, 0, paddedData, dataToPad.length, pad.length);
-
-			System.out.println(PrintUtils.bytesAsString(pad));
-
-			return paddedData;
+			byte[] padding = createPadding(bytesToPad, bitsToPad, dataToPad);
 		}
 
-		return dataToPad;
+		return paddedData;
+	}
+
+	private static byte[] createPadding(int bytesToPad, int bitsToPad, byte[] dataToPad) {
+		int leftoverBits = bytesToPad % bitsToPad;
+		int oddByteBits = leftoverBits % 8;
+		String bits = "1";
+		for(int i = 0; i < oddByteBits - 1; i++) {
+			bits += "0";
+		}
+
+		byte firstByte = (byte) Integer.parseInt(bits, 2);
+		System.out.println("Bytes: " + bytesToPad + " Bits: " + bitsToPad + " Data Bytes: " + dataToPad.length);
+		byte lastByte = dataToPad[dataToPad.length - bytesToPad];
+		String ss = Byte.toString(lastByte);
+		int i = Integer.parseInt(ss);
+		System.out.println(i);
+		String binI = Integer.toBinaryString(i);
+		byte newLastByte = (byte) Integer.parseInt(ss, 2);
+
+		System.out.println(binI);
+		System.out.println(oddByteBits);
+		return null;
 	}
 
 	/* Generate an IV */

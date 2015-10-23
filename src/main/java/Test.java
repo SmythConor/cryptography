@@ -9,13 +9,12 @@ import java.util.BitSet;
 //Hash 200 times = key (k) done 
 //generate IV(128-bit) done
 //encrypt file using (k) with block size 128-bit
-////use IV encryption of 128-bit
+////use IV encryption of 128-bit generated
 ////pad with if 1011 is final block make it 10111000000etc
 ////if full pad with new block 1000000000000etc
 
 //check number of bits short, flip index d
 
-@SuppressWarnings("unchecked")
 class Test {
 	private static final int BITS = 128;
 	private static final String FILE = "../src/main/java/keys";
@@ -39,7 +38,11 @@ class Test {
 
 		/* Message to encrypt */
 		BigInteger me = KeyGenerator.generateKey(128);
+		byte[] temp = me.toByteArray();
 		byte[] ll = new byte[16];
+		for(int i = 1; i < ll.length - 1; i++) {
+			ll[i] = temp[i];
+		}
 
 		/* Create Cipher; to be changed to just encrpyt file */
 		Cipher cipher = Encryptor.encryptFile(hashedPassword, ll);
