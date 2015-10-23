@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.lang.reflect.Field;
 import javax.crypto.Cipher;
+import static javax.crypto.Cipher.ENCRYPT_MODE;
 import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
@@ -45,63 +46,65 @@ class Encryptor {
 	}
 
 	public static Cipher encryptFile(byte[] encryptionKey, byte[] dataToEncrypt) {
-		Cipher cipher = initialiseCipher(Cipher.ENCRYPT_MODE, encryptionKey);
+		Cipher cipher = initialiseCipher(ENCRYPT_MODE, encryptionKey);
 
 		System.out.println("Data before: " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
 		dataToEncrypt = Padder.applyPadding(dataToEncrypt);
 		System.out.println("Data after : " + dataToEncrypt.length + " " + PrintUtils.bytesAsString(dataToEncrypt));
 
-		byte[] encryptedData = encryptFile(cipher, dataToEncrypt);
+		byte[] encryptedData = executeCipher(cipher, dataToEncrypt);
 		System.out.println("Encrypted Data: " + PrintUtils.bytesAsString(encryptedData));
 
 		return cipher;
 	}
 
 	/* Encrypt the file with given cipher and data as byte array */
-	private static byte[] encryptFile(Cipher cipher, byte[] dataToWrite) {
+	private static byte[] executeCipher(Cipher cipher, byte[] data) {
 		try {
-			return cipher.doFinal(dataToWrite);
+			return cipher.doFinal(data);
 		} catch(Exception e) {
-			System.out.println("Error encrypting data");
-			//e.printStackTrace();
+			System.out.println("Error encrypting/decrypting data");
+			e.printStackTrace();
 			exit();
 
 			return null;
 		}
 	}
 
-	private static byte[] applyPadding(byte[] dataToPad) {
-		byte[] paddedData = dataToPad;
-		if(dataToPad.length % 16 == 0) {
-		} else {
-			int bytesToPad = dataToPad.length % 16;
-			int bitsToPad = (dataToPad.length * 8) % 128;
+	public static void rsaEncrypt(String password) {
+		BigInteger exponent = new BigInteger("65537");
+		BufferedReaderFacade reader = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/mod");
 
-			byte[] padding = createPadding(bytesToPad, bitsToPad, dataToPad);
-		}
+		String key = reader.readLine();
+		BigInteger modulus = new BigInteger(key.getBytes());
+		BigInteger dataToEncrypt = new BigInteger(password.getBytes());
 
-		return paddedData;
+		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
+
+		System.out.println(encryptedData);
 	}
 
-	private static byte[] createPadding(int bytesToPad, int bitsToPad, byte[] dataToPad) {
-		int leftoverBits = bytesToPad % bitsToPad;
-		int oddByteBits = leftoverBits % 8;
-		String bits = "1";
-		for(int i = 0; i < oddByteBits - 1; i++) {
-			bits += "0";
+	public static BigInteger tempRsaEncrypt(String password) {
+		BigInteger exponent = new BigInteger("65537");
+		BufferedReaderFacade pub = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/new_mod");
+		BufferedReaderFacade prv = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/n_mod");
+		String mod = pub.readLine();
+		BigInteger n = new BigInteger(mod.getBytes());
+
+		BigInteger result = new BigInteger(password.getBytes());
+
+		result = result.modPow(exponent, n);
+		System.out.println(result);
+
+		exponent = exponent.modInverse(new BigInteger("65536"));
+		mod = prv.readLine();
+		n = new BigInteger(mod.getBytes());
+		result = result.modPow(exponent, n);
+		byte[] bbs = result.toByteArray();
+		for(byte b : bbs) {
+			System.out.print(b);
 		}
 
-		byte firstByte = (byte) Integer.parseInt(bits, 2);
-		System.out.println("Bytes: " + bytesToPad + " Bits: " + bitsToPad + " Data Bytes: " + dataToPad.length);
-		byte lastByte = dataToPad[dataToPad.length - bytesToPad];
-		String ss = Byte.toString(lastByte);
-		int i = Integer.parseInt(ss);
-		System.out.println(i);
-		String binI = Integer.toBinaryString(i);
-		byte newLastByte = (byte) Integer.parseInt(ss, 2);
-
-		System.out.println(binI);
-		System.out.println(oddByteBits);
 		return null;
 	}
 
