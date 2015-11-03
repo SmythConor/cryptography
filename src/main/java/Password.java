@@ -1,5 +1,4 @@
 import java.math.BigInteger;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
 * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
@@ -47,15 +46,5 @@ class Password {
 		String password = pass + salt.toString();
 
 		return password;
-	}
-
-	public BigInteger pow(int e) {
-		//password to the power of e
-		return salt;
-	}
-
-	public BigInteger mod(int n) {
-		//
-		return salt;
 	}
 }
