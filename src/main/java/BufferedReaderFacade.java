@@ -2,9 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+ * @since 2015-10-23
+ * All work is my own
+ * Make Reading from file cleaner from main class
+ */
 class BufferedReaderFacade {
 	BufferedReader reader;
 
+	/**
+	 * All Args constructor
+	 * @param file name of the file to read from
+	 */
 	public BufferedReaderFacade(String file) {
 		try {
 			reader = new BufferedReader(new FileReader(file));
@@ -14,6 +24,9 @@ class BufferedReaderFacade {
 		}
 	}
 
+	/**
+	 * Read a line from file
+	 */
 	public String readLine() {
 		try {
 			return reader.readLine();
@@ -25,6 +38,9 @@ class BufferedReaderFacade {
 		}
 	}
 
+	/**
+	 * Close the buffered reader
+	 */
 	public void close() {
 		try {
 			reader.close();
