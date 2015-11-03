@@ -18,7 +18,7 @@ class KeyGenerator {
 
 		do {
 			i = generateBits(STD_BITS);
-		} while(i.bitLength() != 128);
+		} while(i.bitLength() != STD_BITS);
 
 		return i;
 	}
