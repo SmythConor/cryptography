@@ -38,14 +38,10 @@ class Test {
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
 		encryptor.encrypt(dataToEncrypt);
 
-//		Encryptor.rsaEncrypt(p.getPassword());
-		Encryptor.tempRsaEncrypt(p.getPassword());
+		Encryptor.rsaEncrypt(p.getPassword());
 
 		byte[] iv = encryptor.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
-
-		//BigInteger result = Encryptor.tempRsaEncrypt(p.getPassword());
-		//Encryptor.rsaEncrypt(p.getPassword());
 
 		writer.close();
 	}

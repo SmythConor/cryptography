@@ -4,6 +4,7 @@ import javax.crypto.Cipher;
 import java.security.Key;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
@@ -104,15 +105,15 @@ class Encryptor {
 	}
 
 	public static void rsaEncrypt(String password) {
-		BigInteger exponent = new BigInteger("65537");
-		BufferedReaderFacade reader = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/mod");
+		BigInteger exponent = new BigInteger("65537"); //Class.getExponent
+		BufferedReaderFacade reader = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/mod");
 
 		String key = reader.readLine();
-		BigInteger modulus = new BigInteger(key.getBytes());
-		BigInteger dataToEncrypt = new BigInteger(password.getBytes());
+		BigInteger modulus = new BigInteger(key, 16); //Class.getModulous
+		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
 		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
-		BigInteger encryptedData2 = modPow(dataToEncrypt, exponent, modulus);
+		System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
 	}
 
 	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
@@ -131,38 +132,6 @@ class Encryptor {
 		}
 
 		return a;
-	}
-
-	public static BigInteger tempRsaEncrypt(String password) {
-		BigInteger exponent = new BigInteger("65537");
-//		BufferedReaderFacade pub = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/new_mod");
-		BufferedReaderFacade pub = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/mod");
-//		BufferedReaderFacade prv = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/n_mod");
-		String mod = pub.readLine();
-		BigInteger n = new BigInteger(mod.getBytes());
-
-		BigInteger result = new BigInteger(password.getBytes());
-		System.out.println(PrintUtils.bytesAsString(result.toByteArray()));
-		BigInteger result2 = new BigInteger(password.getBytes());
-		System.out.println(PrintUtils.bytesAsString(result2.toByteArray()));
-
-		result = result.modPow(exponent, n);
-		result2 = modPow(result2, exponent, n);
-		System.out.println(PrintUtils.bytesAsString(result.toByteArray()));
-		System.out.println(PrintUtils.bytesAsString(result2.toByteArray()));
-
-	/*	exponent = exponent.modInverse(new BigInteger("65536"));
-		mod = prv.readLine();
-		n = new BigInteger(mod.getBytes());
-		result = result.modPow(exponent, n);
-		result2 = modPow(result2, exponent, n);
-		//System.out.println(result);
-		//System.out.println(result2);
-		byte[] bbs = result.toByteArray();
-//		System.out.println(PrintUtils.bytesAsString(bbs));
-*/
-
-		return null;
 	}
 
 	/**
