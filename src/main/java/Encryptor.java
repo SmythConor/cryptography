@@ -19,6 +19,8 @@ class Encryptor {
 	private static final String CIPHER_TYPE = "AES";
 	private static final String CIPHER_INSTANCE = "AES/CBC/NoPadding";
 
+	private static final String EXPONENT = "65537";
+
 	public Encryptor(int mode, byte[] key) {
 		this.key = key;
 		this.cipher = initialiseCipher(mode, this.key);
@@ -105,11 +107,17 @@ class Encryptor {
 	}
 
 	public static void rsaEncrypt(String password) {
-		BigInteger exponent = new BigInteger("65537"); //Class.getExponent
-		BufferedReaderFacade reader = new BufferedReaderFacade("/home/conor/work/college/year4/cryptography/src/main/java/mod");
+		BigInteger exponent = new BigInteger(EXPONENT);
+		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
+		String key = "";
 
-		String key = reader.readLine();
-		BigInteger modulus = new BigInteger(key, 16); //Class.getModulous
+		while(scanner.hasNext()) {
+			key += scanner.next();
+		}
+
+		scanner.close();
+
+		BigInteger modulus = new BigInteger(key, 16);
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
 		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
