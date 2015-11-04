@@ -39,7 +39,8 @@ class Test {
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
 		encryptor.encrypt(dataToEncrypt);
 
-		Encryptor.rsaEncrypt(p.getPassword());
+		byte[] encryptedPassword = Encryptor.rsaEncrypt(p.getPassword());
+		writer.writeLine("Encrypted Data: " + PrintUtils.bytesAsString(encryptedPassword) + " Number of bits: " + encryptedPassword.length * 8);
 
 		byte[] iv = encryptor.getIV();
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);

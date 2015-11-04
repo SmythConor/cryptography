@@ -106,32 +106,30 @@ class Encryptor {
 		}
 	}
 
-	public static void rsaEncrypt(String password) {
+	public static byte[] rsaEncrypt(String password) {
 		BigInteger exponent = new BigInteger(EXPONENT);
 		BigInteger modulus = getModulus();
 
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
-		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
-		System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
+		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
+		return encryptedData.toByteArray();
+//		System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
 	}
 
 	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
-		BigInteger a = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
+		BigInteger result = BigInteger.ONE;
 
-		long pow;
-		for(pow = 4; pow * pow <= exponent.longValue(); pow = pow * pow) {
-			a = (a.multiply(a)).mod(modulus);
-		}
-
-
-		if(pow < exponent.longValue()) {
-			for(; pow < exponent.longValue(); pow++) {
-				a = (a.multiply(a)).mod(modulus);
+		while(exponent.compareTo(BigInteger.ZERO) > 0) {
+			if(exponent.testBit(0)) {
+				result = (result.multiply(dataToEncrypt)).mod(modulus);
 			}
+
+			exponent = exponent.shiftRight(1);
+			dataToEncrypt = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
 		}
 
-		return a;
+		return result.mod(modulus);
 	}
 
 	private static BigInteger getModulus() {
