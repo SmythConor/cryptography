@@ -1,5 +1,6 @@
 import java.math.BigInteger;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class Test {
 	private static final int BITS = 128;
@@ -32,7 +33,7 @@ class Test {
 
 		scanner.close();
 		
-		byte[] dataToEncrypt = file.getBytes();
+		byte[] dataToEncrypt = file.getBytes(UTF_8);
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);

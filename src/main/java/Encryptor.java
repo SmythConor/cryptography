@@ -108,16 +108,8 @@ class Encryptor {
 
 	public static void rsaEncrypt(String password) {
 		BigInteger exponent = new BigInteger(EXPONENT);
-		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
-		String key = "";
+		BigInteger modulus = getModulus();
 
-		while(scanner.hasNext()) {
-			key += scanner.next();
-		}
-
-		scanner.close();
-
-		BigInteger modulus = new BigInteger(key, 16);
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
 		BigInteger encryptedData = dataToEncrypt.modPow(exponent, modulus);
@@ -140,6 +132,19 @@ class Encryptor {
 		}
 
 		return a;
+	}
+
+	private static BigInteger getModulus() {
+		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
+		String key = "";
+
+		while(scanner.hasNext()) {
+			key += scanner.next();
+		}
+
+		scanner.close();
+
+		return new BigInteger(key, 16);
 	}
 
 	/**

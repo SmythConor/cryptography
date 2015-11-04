@@ -1,5 +1,5 @@
 import java.security.MessageDigest;
-import java.nio.charset.StandardCharsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import java.math.BigInteger;
 import javax.xml.bind.DatatypeConverter;
 
@@ -25,7 +25,7 @@ class PasswordHasher {
 			e.printStackTrace();
 		}
 
-		messageDigest.update(password.getBytes());
+		messageDigest.update(password.getBytes(UTF_8));
 		byte[] digest = null;
 
 		for(int hashCounter = 0; hashCounter < 200; hashCounter++) {
