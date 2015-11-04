@@ -13,7 +13,7 @@ class Password {
 	 * No Args constructor
 	 */
 	public Password() {
-		this.pass = "password";
+		this.pass = "ahph3chei5Ju";
 	}
 
 	/**
