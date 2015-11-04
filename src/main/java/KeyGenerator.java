@@ -14,13 +14,13 @@ class KeyGenerator {
 	 * @return BigInteger with 128 bits
 	 */
 	public static BigInteger generateKey() {
-		BigInteger i = null;
+		BigInteger key = null;
 
 		do {
-			i = generateBits(STD_BITS);
-		} while(i.bitLength() != STD_BITS);
+			key = generateBits(STD_BITS);
+		} while(key.bitLength() != STD_BITS);
 
-		return i;
+		return key;
 	}
 
 	/**
@@ -29,13 +29,13 @@ class KeyGenerator {
 	 * @return BigInteger salt with the specified number of bits
 	 */
 	public static BigInteger generateKey(int bits) {
-		BigInteger i = null;
+		BigInteger key = null;
 
 		do {
-			i = generateBits(bits);
-		} while(i.bitLength() != bits);
+			key = generateBits(bits);
+		} while(key.bitLength() != bits);
 
-		return i;
+		return key;
 	}
 
 	private static BigInteger generateBits(int bits) {
