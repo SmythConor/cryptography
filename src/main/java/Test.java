@@ -4,7 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 class Test {
 	private static final int BITS = 128;
-	private static final String FILE = "../src/main/java/keys";
+	private static final String FILE = "../src/main/java/data";
 	//private static final String 
 
 	public static void main(String[] args) {
@@ -21,7 +21,7 @@ class Test {
 		byte[] encryptionKey = PasswordHasher.hashPassword(p.getSaltPassword());
 
 		/* Message to encrypt */
-		ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src/main/java/binf");
+		ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src/main/java/test");
 		String file = "";
 
 		while(scanner.hasNext()) {
@@ -34,7 +34,8 @@ class Test {
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
-		encryptor.encrypt(dataToEncrypt);
+		byte[] encryptedData = encryptor.encrypt(dataToEncrypt);
+		System.out.println(PrintUtils.bytesAsString(encryptedData));
 
 		byte[] encryptedPassword = Encryptor.rsaEncrypt(p.getPassword());
 

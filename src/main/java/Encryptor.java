@@ -79,7 +79,7 @@ class Encryptor {
 	/**
 	 * Encrypt the data
 	 * @param dataToEncrypt Data to be encrypted
-	 @ @return data encrypted by cipher
+	 * @return data encrypted by cipher
 	 */
 	public byte[] encrypt(byte[] dataToEncrypt) {
 		dataToEncrypt = Padder.applyPadding(cipher.getBlockSize(), dataToEncrypt);
