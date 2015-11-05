@@ -2,7 +2,7 @@ import java.math.BigInteger;
 import static javax.crypto.Cipher.ENCRYPT_MODE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-class Test {
+class Main {
 	private static final int BITS = 128;
 	private static final String FILE = "../src/main/java/data";
 	//private static final String 
