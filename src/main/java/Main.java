@@ -35,7 +35,7 @@ class Main {
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
 		byte[] encryptedData = encryptor.encrypt(dataToEncrypt);
-		System.out.println(PrintUtils.bytesAsString(encryptedData));
+		//System.out.println(PrintUtils.bytesAsString(encryptedData));
 
 		byte[] encryptedPassword = Encryptor.rsaEncrypt(p.getPassword());
 

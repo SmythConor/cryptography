@@ -118,9 +118,18 @@ class Encryptor {
 
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
+		//System.out.println(PrintUtils.bytesAsString(dataToEncrypt.toByteArray()));
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
+		BigInteger encryptedData2 = modPow2(dataToEncrypt, exponent, modulus);
+
+		System.out.println("First: " + PrintUtils.bytesAsString(encryptedData.toByteArray()));
+		System.out.println("Second: " + PrintUtils.bytesAsString(encryptedData2.toByteArray()));
+		//BigInteger pMod = getPMod();
+		//BigInteger decryptedData = modPow(encryptedData, exponent, pMod);
+		//System.out.println(PrintUtils.bytesAsString(decryptedData.toByteArray()));
+
 		return encryptedData.toByteArray();
-//		System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
+		//System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
 	}
 
 	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
@@ -138,8 +147,36 @@ class Encryptor {
 		return result.mod(modulus);
 	}
 
+	private static BigInteger modPow2(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
+		BigInteger result = BigInteger.ONE;
+
+		while(exponent.compareTo(dataToEncrypt) < 0) {
+			if(exponent.testBit(0)) {
+				result = (result.multiply(dataToEncrypt)).mod(modulus);
+			}
+
+			exponent = exponent.shiftLeft(1);
+			dataToEncrypt = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
+		}
+
+		return result.mod(modulus);
+	}
+
 	private static BigInteger getModulus() {
 		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
+		String key = "";
+
+		while(scanner.hasNext()) {
+			key += scanner.next();
+		}
+
+		scanner.close();
+
+		return new BigInteger(key, 16);
+	}
+
+	private static BigInteger getPMod() {
+		ScannerFacade scanner = new ScannerFacade("../src/main/java/pmod");
 		String key = "";
 
 		while(scanner.hasNext()) {
