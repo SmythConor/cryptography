@@ -1,7 +1,5 @@
 import java.security.MessageDigest;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import java.math.BigInteger;
-import javax.xml.bind.DatatypeConverter;
 
 /**
 * @author Conor Smyth <conor.smyth39@mail.dcu.ie>

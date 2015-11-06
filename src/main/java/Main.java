@@ -11,7 +11,7 @@ class Main {
 		PrintWriterFacade writer = new PrintWriterFacade(FILE);
 
 		/* Generate Salt and write to file */
-		BigInteger salt = KeyGenerator.generateKey(BITS);
+		byte[] salt = KeyGenerator.generateKey(BITS);
 
 		/* Generate Password, add salt and write to file */
 		Password p = new Password();
@@ -42,7 +42,7 @@ class Main {
 		byte[] iv = encryptor.getIV();
 
 		/* Print Everything */
-		writer.writeLine("Salt: " + PrintUtils.bytesAsString(salt.toByteArray()) + " Number of bits: " + salt.bitLength());
+		writer.writeLine("Salt: " + PrintUtils.bytesAsString(salt) + " Number of bits: " + salt.length * 8);
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 		writer.writeLine("Encrypted Password: " + PrintUtils.bytesAsString(encryptedPassword) + " Number of bits: " + encryptedPassword.length * 8);
 

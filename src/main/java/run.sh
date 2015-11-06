@@ -1,3 +1,3 @@
 cd ../../../bin/
-java Test
+java Main
 cd -

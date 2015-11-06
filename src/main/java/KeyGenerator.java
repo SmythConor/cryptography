@@ -29,7 +29,7 @@ class KeyGenerator {
 
 	private static byte[] generateBits(int bits) {
 		SecureRandom secureRandom = new SecureRandom();
-		byte[] bytes = new byte[bits * 8];
+		byte[] bytes = new byte[bits / 8];
 
 		secureRandom.nextBytes(bytes);
 
