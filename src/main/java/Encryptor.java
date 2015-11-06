@@ -23,7 +23,12 @@ class Encryptor {
 
 	public Encryptor(int mode, byte[] key) {
 		this.key = key;
-		this.cipher = initialiseCipher(mode, this.key);
+		this.cipher = initialiseCipher(mode, null);
+	}
+
+	public Encryptor(int mode, byte[] key, byte[] iv) {
+		this.key = key;
+		this.cipher = initialiseCipher(mode, iv);
 	}
 
 	public Cipher getCipher() {
@@ -46,11 +51,10 @@ class Encryptor {
 		return this.cipher.getIV();
 	}
 
-	/* initialise Cipher with the key supplied */
 	/**
 	 * Initialise the cipher with the mode and key
 	 */
-	private Cipher initialiseCipher(int mode, byte[] key) {
+	private Cipher initialiseCipher(int mode, byte[] iv) {
 		try {
 			cipher = Cipher.getInstance(CIPHER_INSTANCE);
 		} catch(Exception e) {
@@ -58,15 +62,17 @@ class Encryptor {
 			e.printStackTrace();
 			exit();
 		}
+		
+		if(iv == null) {
+			iv = getIntialisationVector();
+		}
 
-		byte[] iv = getIntialisationVector();
-
-		Key cipherKey = new SecretKeySpec(key, CIPHER_TYPE);
+		Key cipherKey = new SecretKeySpec(this.key, CIPHER_TYPE);
 
 		updateKeyLimit();
 
 		try {
-			cipher.init(mode, cipherKey, new IvParameterSpec(iv, 1, iv.length - 1));
+			cipher.init(mode, cipherKey, new IvParameterSpec(iv));
 		} catch(Exception e) {
 			System.out.println("Error initialising cipher");
 			e.printStackTrace();
@@ -150,7 +156,7 @@ class Encryptor {
 	 * @return IV as a byte array
 	 */
 	private byte[] getIntialisationVector() {
-		return KeyGenerator.generateKey(STD_BITS).toByteArray();
+		return KeyGenerator.generateKey(STD_BITS);
 	}
 
 	/* Update java security defaults to allow for 256 key size */
