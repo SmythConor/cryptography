@@ -19,8 +19,6 @@ class Encryptor {
 	private static final String CIPHER_TYPE = "AES";
 	private static final String CIPHER_INSTANCE = "AES/CBC/NoPadding";
 
-	private static final String EXPONENT = "65537";
-
 	public Encryptor(int mode, byte[] key) {
 		this.key = key;
 		this.cipher = initialiseCipher(mode, null);
@@ -58,16 +56,15 @@ class Encryptor {
 		try {
 			cipher = Cipher.getInstance(CIPHER_INSTANCE);
 		} catch(Exception e) {
-			System.out.println("Error creating instance of cipher " + CIPHER_INSTANCE);
+			System.out.println("Error creating instance of cipher " + this.CIPHER_INSTANCE);
 			e.printStackTrace();
-			exit();
 		}
 		
 		if(iv == null) {
 			iv = getIntialisationVector();
 		}
 
-		Key cipherKey = new SecretKeySpec(this.key, CIPHER_TYPE);
+		Key cipherKey = new SecretKeySpec(this.key, this.CIPHER_TYPE);
 
 		updateKeyLimit();
 
@@ -76,7 +73,6 @@ class Encryptor {
 		} catch(Exception e) {
 			System.out.println("Error initialising cipher");
 			e.printStackTrace();
-			exit();
 		}
 
 		return cipher;
@@ -95,6 +91,12 @@ class Encryptor {
 		return encryptedData;
 	}
 
+	public byte[] decrypt(byte[] dataToDecrypt) {
+		byte[] decryptedData = executeCipher(dataToDecrypt);
+
+		return decryptedData;
+	}
+
 	/**
 	 * Execute cipher on data
 	 * @param data data to be encrypted/decrypted
@@ -106,7 +108,6 @@ class Encryptor {
 		} catch(Exception e) {
 			System.out.println("Error encrypting/decrypting data");
 			e.printStackTrace();
-			exit();
 
 			return null;
 		}
@@ -118,76 +119,27 @@ class Encryptor {
 
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
-		System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt.toByteArray()));
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
-		BigInteger encryptedData2 = modPow2(dataToEncrypt, exponent, modulus);
-
-		System.out.println("First: " + PrintUtils.bytesAsString(encryptedData.toByteArray()));
-		System.out.println("Second: " + PrintUtils.bytesAsString(encryptedData2.toByteArray()));
-		//BigInteger pMod = getPMod();
-		//BigInteger decryptedData = modPow(encryptedData, exponent, pMod);
-		//System.out.println(PrintUtils.bytesAsString(decryptedData.toByteArray()));
 
 		return encryptedData.toByteArray();
-		//System.out.println(PrintUtils.bytesAsString(encryptedData.toByteArray()));
 	}
 
 	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
-		BigInteger result = BigInteger.ONE;
+		BigInteger y = BigInteger.ONE;
 
-		while(exponent.compareTo(BigInteger.ZERO) > 0) {
+		for(BigInteger i = BigInteger.ZERO; i.compareTo(exponent) < 0; exponent = exponent.shiftRight(1)) {
 			if(exponent.testBit(0)) {
-				result = (result.multiply(dataToEncrypt)).mod(modulus);
+				y = (y.multiply(dataToEncrypt)).mod(modulus);
 			}
 
-			exponent = exponent.shiftRight(1);
 			dataToEncrypt = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
 		}
 
-		return result.mod(modulus);
-	}
-
-	private static BigInteger modPow2(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
-		BigInteger result = BigInteger.ONE;
-		BigInteger org = exponent;
-
-		while(exponent.compareTo(org) < 0) {
-			if(exponent.testBit(0)) {
-				result = (result.multiply(dataToEncrypt)).mod(modulus);
-			}
-
-			exponent = exponent.shiftLeft(1);
-			dataToEncrypt = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
-		}
-
-		return result.mod(modulus);
+		return y.mod(modulus);
 	}
 
 	private static BigInteger getModulus() {
-		//return new BigInteger(RsaInfo.getKey(), 16); //will be this
-		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
-		String key = "";
-
-		while(scanner.hasNext()) {
-			key += scanner.next();
-		}
-
-		scanner.close();
-
-		return new BigInteger(key, 16);
-	}
-
-	private static BigInteger getPMod() {
-		ScannerFacade scanner = new ScannerFacade("../src/main/java/pmod");
-		String key = "";
-
-		while(scanner.hasNext()) {
-			key += scanner.next();
-		}
-
-		scanner.close();
-
-		return new BigInteger(key, 16);
+		return new BigInteger(RsaInfo.getKey(), 16);
 	}
 
 	/**
@@ -208,13 +160,6 @@ class Encryptor {
 		} catch(Exception e) {
 			System.out.println("Error modifying Security limit");
 			e.printStackTrace();
-			exit();
 		}
-	}
-
-	/* exit method to exit program if exception caught */
-	private void exit() {
-		System.out.println("Exiting.");
-		System.exit(0);
 	}
 }
