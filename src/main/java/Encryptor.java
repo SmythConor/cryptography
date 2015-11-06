@@ -113,12 +113,12 @@ class Encryptor {
 	}
 
 	public static byte[] rsaEncrypt(String password) {
-		BigInteger exponent = new BigInteger(EXPONENT);
+		BigInteger exponent = new BigInteger(RsaInfo.getExponent());
 		BigInteger modulus = getModulus();
 
 		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
 
-		//System.out.println(PrintUtils.bytesAsString(dataToEncrypt.toByteArray()));
+		System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt.toByteArray()));
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
 		BigInteger encryptedData2 = modPow2(dataToEncrypt, exponent, modulus);
 
@@ -149,8 +149,9 @@ class Encryptor {
 
 	private static BigInteger modPow2(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
 		BigInteger result = BigInteger.ONE;
+		BigInteger org = exponent;
 
-		while(exponent.compareTo(dataToEncrypt) < 0) {
+		while(exponent.compareTo(org) < 0) {
 			if(exponent.testBit(0)) {
 				result = (result.multiply(dataToEncrypt)).mod(modulus);
 			}
@@ -163,6 +164,7 @@ class Encryptor {
 	}
 
 	private static BigInteger getModulus() {
+		//return new BigInteger(RsaInfo.getKey(), 16); //will be this
 		ScannerFacade scanner = new ScannerFacade("../src/main/java/mod");
 		String key = "";
 
