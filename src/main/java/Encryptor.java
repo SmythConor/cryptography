@@ -84,7 +84,11 @@ class Encryptor {
 	 * @return data encrypted by cipher
 	 */
 	public byte[] encrypt(byte[] dataToEncrypt) {
+//		System.out.println("Before padding: ");
+//		PrintUtils.printHexString(dataToEncrypt);
 		dataToEncrypt = Padder.applyPadding(cipher.getBlockSize(), dataToEncrypt);
+//		System.out.println("After padding: and bits: " + dataToEncrypt.length * 8);
+//		PrintUtils.printHexString(dataToEncrypt);
 
 		byte[] encryptedData = executeCipher(dataToEncrypt);
 
@@ -122,6 +126,10 @@ class Encryptor {
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
 
 		return encryptedData.toByteArray();
+	}
+
+	public static byte[] rsaDecrypt() {
+		throw new UnsupportedOperationException();
 	}
 
 	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {

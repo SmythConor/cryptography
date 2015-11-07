@@ -24,35 +24,28 @@ class Main {
 
 		byte[] dataToEncrypt = null;
 		/* Message to encrypt */
-		try {
-			File f = new File("/home/conor/work/college/year4/cryptography/src.zip");
+		try { //will be able to remove this
+			File f = new File("/home/conor/work/college/year4/cryptography/src/main/java/test");
 			byte[] file = new byte[(int) (f.length())];
 			FileInputStream fis = new FileInputStream(f);
 			fis.read(file);
 			dataToEncrypt = file;
 			fis.close();
-		} catch(Exception e) {
+		} catch(Exception e) {}
 
-		}
-		//ScannerFacade scanner = new ScannerFacade("/home/conor/work/college/year4/cryptography/src.zip");
-		//String file = "";
-
-		//while(scanner.hasNext()) {
-		//	file += scanner.next();
-		//}
-
-		//scanner.close();
-
-//		byte[] dataToEncrypt = file.getBytes(UTF_8);
-		System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt));
+		//System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt) + " Number of bits: " + dataToEncrypt.length * 8);
+//		PrintUtils.med(dataToEncrypt);
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
-		byte[] encryptedData = encryptor.encrypt(dataToEncrypt);
-		System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData));
+		byte[] encryptedData = encryptor.encrypt(dataToEncrypt); //change to encrypt file
+		System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData) + " Number of bits: " + encryptedData.length * 8);
+		//PrintUtils.med(encryptedData);
 		Encryptor e = new Encryptor(DECRYPT_MODE, encryptionKey);
 		byte[] decryptedData = e.decrypt(encryptedData);
-		System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData));
+		System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
+		//PrintUtils.med(decryptedData);
+		
 
 		/* Encrypt the Password using RSA */
 		byte[] encryptedPassword = Encryptor.rsaEncrypt(p.getPassword());
