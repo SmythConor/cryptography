@@ -44,7 +44,7 @@ class Main {
 		byte[] iv = encryptor.getIV();
 
 		/* Create writer to print to file */
-		PrintWriterFacade writer = new PrintWriterFacade(FILE);
+		PrintWriterFacade writer = new PrintWriterFacade(SUBMISSION_FILE);
 
 		/* Print Everything */
 		writer.writeLine("Salt: " + PrintUtils.bytesAsString(salt) + " Number of bits: " + salt.length * 8);
