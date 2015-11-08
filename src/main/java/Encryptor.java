@@ -119,29 +119,6 @@ class Encryptor {
 	}
 
 	/**
-	 * Decrypt the file,
-	 * @param fileName name of the file to decrypt
-	 * @return name of decrypted file as a string
-	 */
-	public String decryptFile(String fileName) {
-		String decryptedFileName = String.format("decrypted_%s", fileName);
-		FileStreamFacade io = new FileStreamFacade(fileName, decryptedFileName);
-
-		byte[] dataToDecrypt = io.readFile();
-		System.out.println(dataToDecrypt.length % 16);
-
-		//dataToDecrypt = Padder.removePadding(cipher.getBlockSize(), dataToDecrypt);
-
-		byte[] decryptedData = executeCipher(dataToDecrypt);
-
-		io.writeFile(decryptedData);
-
-		io.close();
-
-		return decryptedFileName;
-	}
-
-	/**
 	 * Execute cipher on data
 	 * @param data data to be encrypted/decrypted
 	 * @return data encrypted/decrypted as byte array

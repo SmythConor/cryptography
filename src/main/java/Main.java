@@ -11,7 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 */
 class Main {
 	private static final int STD_BITS = 128;
-	private static final String FILE = "/home/conor/work/college/year4/cryptography/submission_data";
+	private static final String SUBMISSION_FILE = "/home/conor/work/college/year4/cryptography/submission_data";
 
 	public static void main(String[] args) {
 		/* Generate Salt and write to file */
