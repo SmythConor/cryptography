@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,22 +12,16 @@ import java.io.IOException;
  */
 class FileStreamFacade {
 	File inputFile;
-	File outputFile;
 
 	FileInputStream input;
-	FileOutputStream output;
+	PrintWriterFacade writer;
 
 	public FileStreamFacade(String inputFileName, String outputFileName) {
 		this.inputFile = new File(inputFileName);
-		this.outputFile = new File(outputFileName);
+		this.writer = new PrintWriterFacade(outputFileName);
 
 		try {
 			this.input = new FileInputStream(this.inputFile);
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.output = new FileOutputStream(this.outputFile);
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -47,11 +40,7 @@ class FileStreamFacade {
 	}
 
 	public void writeFile(byte[] dataToWrite) {
-		try {
-			this.output.write(dataToWrite);
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		writer.writeLine(PrintUtils.bytesAsString(dataToWrite));
 	}
 
 	public void close() {
@@ -60,10 +49,7 @@ class FileStreamFacade {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		try {
-			this.output.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+
+		this.writer.close();
 	}
 }

@@ -1,4 +1,5 @@
 import java.io.PrintWriter;
+import java.io.FileNotFoundException;
 
 /**
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
@@ -16,7 +17,7 @@ class PrintWriterFacade {
 	public PrintWriterFacade(String file) {
 		try {
 			writer = new PrintWriter(file);
-		} catch(Exception e) {
+		} catch(FileNotFoundException e) {
 			System.out.println("Error opening writer");
 			e.printStackTrace();
 		}

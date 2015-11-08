@@ -1,8 +1,5 @@
 import java.math.BigInteger;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import java.lang.reflect.Field;
 
 import java.security.Key;
@@ -10,8 +7,6 @@ import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
@@ -103,8 +98,9 @@ class Encryptor {
 	/**
 	 * Encrypt the file, resulting file name will be encrypted_fileName
 	 * @param fileName name of the file to encrypt
+	 * @return the name of the encrypted file as a string
 	 */
-	public void encryptFile(String fileName) {
+	public String encryptFile(String fileName) {
 		String encryptedFileName = String.format("encypted_%s", fileName);
 		FileStreamFacade io = new FileStreamFacade(fileName, encryptedFileName);
 
@@ -117,16 +113,31 @@ class Encryptor {
 		io.writeFile(encryptedData);
 
 		io.close();
+
+		return encryptedFileName;
 	}
 
 	/**
 	 * Decrypt the file,
 	 * @param fileName name of the file to decrypt
+	 * @return name of decrypted file as a string
 	 */
-	public void decryptFile(String fileName) {
-		//byte[] decryptedData = executeCipher(dataToDecrypt);
+	public String decryptFile(String fileName) {
+		String decryptedFileName = String.format("decrypted_%s", fileName);
+		FileStreamFacade io = new FileStreamFacade(fileName, decryptedFileName);
 
-		//return decryptedData;
+		byte[] dataToDecrypt = io.readFile();
+		System.out.println(dataToDecrypt.length % 16);
+
+		//dataToDecrypt = Padder.removePadding(cipher.getBlockSize(), dataToDecrypt);
+
+		byte[] decryptedData = executeCipher(dataToDecrypt);
+
+		io.writeFile(decryptedData);
+
+		io.close();
+
+		return decryptedFileName;
 	}
 
 	/**
@@ -212,4 +223,4 @@ class Encryptor {
 			e.printStackTrace();
 		}
 	}
-	}
+}
