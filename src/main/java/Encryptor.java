@@ -1,10 +1,21 @@
 import java.math.BigInteger;
+
 import java.lang.reflect.Field;
-import javax.crypto.Cipher;
+
 import java.security.Key;
+
+import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
+import java.security.InvalidAlgorithmParameterException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.BadPaddingException;
 
 /**
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
@@ -29,37 +40,44 @@ class Encryptor {
 		this.cipher = initialiseCipher(mode, iv);
 	}
 
+	/**
+	 * Return the cipher used for encryption
+	 * @return cipher 
+	 */
 	public Cipher getCipher() {
 		return this.cipher;
 	}
 
-	public void setCipher(Cipher cipher) {
-		this.cipher = cipher;
-	}
-
+	/**
+	 * Return the key used by the cipher
+	 * @return key as byte array
+	 */
 	public byte[] getKey() {
 		return this.key;
 	}
 
-	public void setKey(byte[] key) {
-		this.key = key;
-	}
-
+	/**
+	 * Return the IV used by the cipher
+	 * @return the IV for the cipher as a byte array
+	 */
 	public byte[] getIV() {
 		return this.cipher.getIV();
 	}
 
 	/**
 	 * Initialise the cipher with the mode and key
+	 * @param mode Mode for the cipher
+	 * @param iv IV as a byte array
 	 */
 	private Cipher initialiseCipher(int mode, byte[] iv) {
 		try {
 			cipher = Cipher.getInstance(CIPHER_INSTANCE);
-		} catch(Exception e) {
-			System.out.println("Error creating instance of cipher " + this.CIPHER_INSTANCE);
+		} catch(NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch(NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
-		
+
 		if(iv == null) {
 			iv = getIntialisationVector();
 		}
@@ -70,8 +88,9 @@ class Encryptor {
 
 		try {
 			cipher.init(mode, cipherKey, new IvParameterSpec(iv));
-		} catch(Exception e) {
-			System.out.println("Error initialising cipher");
+		} catch(InvalidKeyException e) {
+			e.printStackTrace();
+		} catch(InvalidAlgorithmParameterException e) {
 			e.printStackTrace();
 		}
 
@@ -84,17 +103,22 @@ class Encryptor {
 	 * @return data encrypted by cipher
 	 */
 	public byte[] encrypt(byte[] dataToEncrypt) {
-//		System.out.println("Before padding: ");
-//		PrintUtils.printHexString(dataToEncrypt);
+		//		System.out.println("Before padding: ");
+		//		PrintUtils.printHexString(dataToEncrypt);
 		dataToEncrypt = Padder.applyPadding(cipher.getBlockSize(), dataToEncrypt);
-//		System.out.println("After padding: and bits: " + dataToEncrypt.length * 8);
-//		PrintUtils.printHexString(dataToEncrypt);
+		//		System.out.println("After padding: and bits: " + dataToEncrypt.length * 8);
+		//		PrintUtils.printHexString(dataToEncrypt);
 
 		byte[] encryptedData = executeCipher(dataToEncrypt);
 
 		return encryptedData;
 	}
 
+	/**
+	 * Decrypt the file
+	 * @param dataToDecrypt the data to decrypt as a byte array
+	 * @return decrypted data as byte array
+	 */
 	public byte[] decrypt(byte[] dataToDecrypt) {
 		byte[] decryptedData = executeCipher(dataToDecrypt);
 
@@ -104,50 +128,68 @@ class Encryptor {
 	/**
 	 * Execute cipher on data
 	 * @param data data to be encrypted/decrypted
-	 * @return data encrypted/decrypted
+	 * @return data encrypted/decrypted as byte array
 	 */
 	private byte[] executeCipher(byte[] data) {
 		try {
 			return cipher.doFinal(data);
-		} catch(Exception e) {
-			System.out.println("Error encrypting/decrypting data");
+		} catch(IllegalBlockSizeException e) {
 			e.printStackTrace();
-
-			return null;
+		} catch(BadPaddingException e) {
+			e.printStackTrace();
 		}
+
+		return null;
 	}
 
-	public static byte[] rsaEncrypt(String password) {
+	/**
+	 * Encrypt the string passed using RSA
+	 * @param data as a byte array
+	 * @return encrypted data as a byte array
+	 */
+	public static byte[] rsaEncrypt(byte[] data) {
 		BigInteger exponent = new BigInteger(RsaInfo.getExponent());
 		BigInteger modulus = getModulus();
 
-		BigInteger dataToEncrypt = new BigInteger(password.getBytes(UTF_8));
+		BigInteger dataToEncrypt = new BigInteger(data);
 
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
 
 		return encryptedData.toByteArray();
 	}
 
-	public static byte[] rsaDecrypt() {
+	/**
+	 * Decrypt the string passed using RSA
+	 * @param data as a byte array
+	 * @return decrypted data as a byte array
+	 */
+	public static byte[] rsaDecrypt(byte[] data) {
 		throw new UnsupportedOperationException();
 	}
 
-	private static BigInteger modPow(BigInteger dataToEncrypt, BigInteger exponent, BigInteger modulus) {
+	/**
+	 * modPow function to replace to java.math.BigInteger#modPow, Uses right to left bit square and multiply algorithm
+	 * @param data data to encrypt/decrypt
+	 * @param exponent exponent for power
+	 * @param modulus modulus for mod
+	 * @return BigInteger result of applying 
+	 */
+	private static BigInteger modPow(BigInteger data, BigInteger exponent, BigInteger modulus) {
 		BigInteger y = BigInteger.ONE;
 
 		for(BigInteger i = BigInteger.ZERO; i.compareTo(exponent) < 0; exponent = exponent.shiftRight(1)) {
 			if(exponent.testBit(0)) {
-				y = (y.multiply(dataToEncrypt)).mod(modulus);
+				y = (y.multiply(data)).mod(modulus);
 			}
 
-			dataToEncrypt = (dataToEncrypt.multiply(dataToEncrypt)).mod(modulus);
+			data = (data.multiply(data)).mod(modulus);
 		}
 
 		return y.mod(modulus);
 	}
 
 	private static BigInteger getModulus() {
-		return new BigInteger(RsaInfo.getKey(), 16);
+		return new BigInteger(RsaInfo.getPublicKey(), 16);
 	}
 
 	/**
@@ -160,13 +202,22 @@ class Encryptor {
 
 	/* Update java security defaults to allow for 256 key size */
 	private void updateKeyLimit() {
+		Field field = null;
+
 		try {
-			Field field = Class.forName("javax.crypto.JceSecurity").
+			field = Class.forName("javax.crypto.JceSecurity").
 				getDeclaredField("isRestricted");
-			field.setAccessible(true);
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch(NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+
+		field.setAccessible(true);
+
+		try {
 			field.set(null, false);
-		} catch(Exception e) {
-			System.out.println("Error modifying Security limit");
+		} catch(IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}

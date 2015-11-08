@@ -1,11 +1,12 @@
 import java.security.MessageDigest;
-import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
-* @author Conor Smyth <conor.smyth39@mail.dcu.ie>
-* @since 2015-10-19
-* All work is my own
-*/
+ * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+ * @since 2015-10-19
+ * All work is my own
+ */
 class PasswordHasher {
 	private static final String HASH = "SHA-256";
 
@@ -14,16 +15,16 @@ class PasswordHasher {
 	 * @param password Password to hash as a String
 	 * @return byte[] with 256 bit password hashed
 	 */
-	public static byte[] hashPassword(String password) {
+	public static byte[] hashPassword(byte[] password) {
 		MessageDigest messageDigest = null;
 
 		try {
 			messageDigest = MessageDigest.getInstance(HASH);
-		} catch(Exception e) {
+		} catch(NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
 
-		messageDigest.update(password.getBytes(UTF_8));
+		messageDigest.update(password);
 		byte[] digest = null;
 
 		for(int hashCounter = 0; hashCounter < 200; hashCounter++) {

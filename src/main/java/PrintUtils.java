@@ -1,5 +1,5 @@
-import java.math.BigInteger;
 import javax.xml.bind.DatatypeConverter;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
@@ -16,15 +16,15 @@ class PrintUtils {
 		return DatatypeConverter.printHexBinary(bytes).toLowerCase();
 	}
 
-	public static void printHexString(byte[] bytes) {
+	public static void printHexBytes(byte[] bytes) {
 		System.out.println(bytesAsString(bytes));
 	}
 
 	public static void printHexAsString(byte[] bytes) {
 		try {
 			System.out.println(new String(bytes, "UTF-8"));
-		} catch(Exception e) {
-
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 	}
 }

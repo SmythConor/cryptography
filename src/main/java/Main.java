@@ -6,21 +6,22 @@ import java.io.FileInputStream;
 import java.io.File;
 
 class Main {
-	private static final int BITS = 128;
+	private static final int STD_BITS = 128;
 	private static final String FILE = "../src/main/java/data";
 
 	public static void main(String[] args) {
-		PrintWriterFacade writer = new PrintWriterFacade(FILE);
-
 		/* Generate Salt and write to file */
-		byte[] salt = KeyGenerator.generateKey(BITS);
+		byte[] salt = KeyGenerator.generateKey(STD_BITS);
 
 		/* Generate Password, add salt and write to file */
 		Password p = new Password();
 		p.setSalt(salt);
 
+		/* Get salted password as bytes */
+		byte[] saltedPassword = p.getSaltPassword().getBytes(UTF_8);
+
 		/* Hash Password and write to file */
-		byte[] encryptionKey = PasswordHasher.hashPassword(p.getSaltPassword());
+		byte[] encryptionKey = PasswordHasher.hashPassword(saltedPassword);
 
 		byte[] dataToEncrypt = null;
 		/* Message to encrypt */
@@ -34,7 +35,7 @@ class Main {
 		} catch(Exception e) {}
 
 		//System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt) + " Number of bits: " + dataToEncrypt.length * 8);
-//		PrintUtils.med(dataToEncrypt);
+		//		PrintUtils.med(dataToEncrypt);
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
@@ -45,13 +46,17 @@ class Main {
 		byte[] decryptedData = e.decrypt(encryptedData);
 		System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
 		//PrintUtils.med(decryptedData);
-		
 
-		/* Encrypt the Password using RSA */
-		byte[] encryptedPassword = Encryptor.rsaEncrypt(p.getPassword());
+		/* Get password as byte array */
+		byte[] password = p.getPassword().getBytes(UTF_8);
+
+		/* Encrypt password using RSA */
+		byte[] encryptedPassword = Encryptor.rsaEncrypt(password);
 
 		/* Get the IV of the cipher */
 		byte[] iv = encryptor.getIV();
+
+		PrintWriterFacade writer = new PrintWriterFacade(FILE);
 
 		/* Print Everything */
 		writer.writeLine("Salt: " + PrintUtils.bytesAsString(salt) + " Number of bits: " + salt.length * 8);
