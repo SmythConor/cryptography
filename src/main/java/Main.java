@@ -1,13 +1,17 @@
 import java.math.BigInteger;
-import static javax.crypto.Cipher.ENCRYPT_MODE;
-import static javax.crypto.Cipher.DECRYPT_MODE;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.io.FileInputStream;
-import java.io.File;
 
+import static javax.crypto.Cipher.ENCRYPT_MODE;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+* Main class to execute code
+* @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+* @since 2015-11-05
+*/
 class Main {
 	private static final int STD_BITS = 128;
-	private static final String FILE = "submission_data";
+	private static final String FILE = "/home/conor/work/college/year4/cryptography/submission_data";
 
 	public static void main(String[] args) {
 		/* Generate Salt and write to file */
@@ -23,24 +27,12 @@ class Main {
 		/* Hash Password and write to file */
 		byte[] encryptionKey = PasswordHasher.hashPassword(saltedPassword);
 
-		byte[] dataToEncrypt = null;
-//		String ff = "/home/conor/work/college/year4/cryptography/src/main/java/test";
-		String ff = "Padder.java";
-
-		//System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt) + " Number of bits: " + dataToEncrypt.length * 8);
-		//		PrintUtils.med(dataToEncrypt);
+		/* Name of file to encrypt */
+		String fileNameToEncrypt = "src.zip";
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
-		String fff = encryptor.encryptFile(ff);
-
-		//System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData) + " Number of bits: " + encryptedData.length * 8);
-		//PrintUtils.med(encryptedData);
-		Encryptor e = new Encryptor(DECRYPT_MODE, encryptionKey);
-		encryptor.decryptFile(fff);
-		//byte[] decryptedData = e.decrypt(encryptedData);
-		//System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
-		//PrintUtils.med(decryptedData);
+		encryptor.encryptFile(fileNameToEncrypt);
 
 		/* Get password as byte array */
 		byte[] password = p.getPassword().getBytes(UTF_8);
@@ -51,6 +43,7 @@ class Main {
 		/* Get the IV of the cipher */
 		byte[] iv = encryptor.getIV();
 
+		/* Create writer to print to file */
 		PrintWriterFacade writer = new PrintWriterFacade(FILE);
 
 		/* Print Everything */
@@ -58,6 +51,7 @@ class Main {
 		writer.writeLine("IV: " + PrintUtils.bytesAsString(iv) + " Number of bits: " + iv.length * 8);
 		writer.writeLine("Encrypted Password: " + PrintUtils.bytesAsString(encryptedPassword) + " Number of bits: " + encryptedPassword.length * 8);
 
+		/* Close writer */
 		writer.close();
 	}
 }

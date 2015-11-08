@@ -1,4 +1,5 @@
 /**
+ * Class for password related functionality
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
  * @since 2015-10-19
  * All work is my own

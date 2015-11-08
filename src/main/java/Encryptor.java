@@ -16,6 +16,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.BadPaddingException;
 
 /**
+ * Encryptor class to execute encryptor functions
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
  * @since 2015-10-20
  * All work is my own
@@ -165,7 +166,6 @@ class Encryptor {
 	public static byte[] rsaEncrypt(byte[] data) {
 		BigInteger exponent = new BigInteger(RsaInfo.getExponent());
 		BigInteger modulus = new BigInteger(RsaInfo.getPublicKey(), 16);
-
 		BigInteger dataToEncrypt = new BigInteger(data);
 
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);

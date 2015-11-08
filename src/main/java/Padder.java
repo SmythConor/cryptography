@@ -1,4 +1,5 @@
 /**
+ * Class to add Padding to a byte array
  * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
  * @since 2015-10-23
  * All work is my own

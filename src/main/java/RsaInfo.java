@@ -1,3 +1,9 @@
+/**
+ * Class to hold the information for the RSA encryption/decryption
+ * @author Conor Smyth <conor.smyth39@mail.dcu.ie>
+ * @since 2015-11-06
+ * All work is my own
+ */
 class RsaInfo {
 	private static final String EXPONENT = "65537";
 
