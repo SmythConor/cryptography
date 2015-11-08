@@ -1,5 +1,8 @@
 import java.math.BigInteger;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import java.lang.reflect.Field;
 
 import java.security.Key;
@@ -98,31 +101,32 @@ class Encryptor {
 	}
 
 	/**
-	 * Encrypt the data
-	 * @param dataToEncrypt Data to be encrypted
-	 * @return data encrypted by cipher
+	 * Encrypt the file, resulting file name will be encrypted_fileName
+	 * @param fileName name of the file to encrypt
 	 */
-	public byte[] encrypt(byte[] dataToEncrypt) {
-		//		System.out.println("Before padding: ");
-		//		PrintUtils.printHexString(dataToEncrypt);
+	public void encryptFile(String fileName) {
+		String encryptedFileName = String.format("encypted_%s", fileName);
+		FileStreamFacade io = new FileStreamFacade(fileName, encryptedFileName);
+
+		byte[] dataToEncrypt = io.readFile();
+
 		dataToEncrypt = Padder.applyPadding(cipher.getBlockSize(), dataToEncrypt);
-		//		System.out.println("After padding: and bits: " + dataToEncrypt.length * 8);
-		//		PrintUtils.printHexString(dataToEncrypt);
 
 		byte[] encryptedData = executeCipher(dataToEncrypt);
 
-		return encryptedData;
+		io.writeFile(encryptedData);
+
+		io.close();
 	}
 
 	/**
-	 * Decrypt the file
-	 * @param dataToDecrypt the data to decrypt as a byte array
-	 * @return decrypted data as byte array
+	 * Decrypt the file,
+	 * @param fileName name of the file to decrypt
 	 */
-	public byte[] decrypt(byte[] dataToDecrypt) {
-		byte[] decryptedData = executeCipher(dataToDecrypt);
+	public void decryptFile(String fileName) {
+		//byte[] decryptedData = executeCipher(dataToDecrypt);
 
-		return decryptedData;
+		//return decryptedData;
 	}
 
 	/**
@@ -208,4 +212,4 @@ class Encryptor {
 			e.printStackTrace();
 		}
 	}
-}
+	}

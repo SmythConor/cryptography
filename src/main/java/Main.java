@@ -7,7 +7,7 @@ import java.io.File;
 
 class Main {
 	private static final int STD_BITS = 128;
-	private static final String FILE = "../src/main/java/data";
+	private static final String FILE = "data";
 
 	public static void main(String[] args) {
 		/* Generate Salt and write to file */
@@ -24,26 +24,20 @@ class Main {
 		byte[] encryptionKey = PasswordHasher.hashPassword(saltedPassword);
 
 		byte[] dataToEncrypt = null;
-		/* Message to encrypt */
-		try { //will be able to remove this
-			File f = new File("/home/conor/work/college/year4/cryptography/src/main/java/test");
-			byte[] file = new byte[(int) (f.length())];
-			FileInputStream fis = new FileInputStream(f);
-			fis.read(file);
-			dataToEncrypt = file;
-			fis.close();
-		} catch(Exception e) {}
+//		String ff = "/home/conor/work/college/year4/cryptography/src/main/java/test";
+		String ff = "test";
 
 		//System.out.println("Before: " + PrintUtils.bytesAsString(dataToEncrypt) + " Number of bits: " + dataToEncrypt.length * 8);
 		//		PrintUtils.med(dataToEncrypt);
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
-		byte[] encryptedData = encryptor.encrypt(dataToEncrypt); //change to encrypt file
+		encryptor.encryptFile(ff);
+
 		//System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData) + " Number of bits: " + encryptedData.length * 8);
 		//PrintUtils.med(encryptedData);
 		Encryptor e = new Encryptor(DECRYPT_MODE, encryptionKey);
-		byte[] decryptedData = e.decrypt(encryptedData);
+		//byte[] decryptedData = e.decrypt(encryptedData);
 		//System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
 		//PrintUtils.med(decryptedData);
 
