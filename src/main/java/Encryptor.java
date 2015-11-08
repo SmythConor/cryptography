@@ -149,22 +149,13 @@ class Encryptor {
 	 */
 	public static byte[] rsaEncrypt(byte[] data) {
 		BigInteger exponent = new BigInteger(RsaInfo.getExponent());
-		BigInteger modulus = getModulus();
+		BigInteger modulus = new BigInteger(RsaInfo.getPublicKey(), 16);
 
 		BigInteger dataToEncrypt = new BigInteger(data);
 
 		BigInteger encryptedData = modPow(dataToEncrypt, exponent, modulus);
 
 		return encryptedData.toByteArray();
-	}
-
-	/**
-	 * Decrypt the string passed using RSA
-	 * @param data as a byte array
-	 * @return decrypted data as a byte array
-	 */
-	public static byte[] rsaDecrypt(byte[] data) {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -186,10 +177,6 @@ class Encryptor {
 		}
 
 		return y.mod(modulus);
-	}
-
-	private static BigInteger getModulus() {
-		return new BigInteger(RsaInfo.getPublicKey(), 16);
 	}
 
 	/**

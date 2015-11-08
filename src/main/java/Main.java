@@ -40,11 +40,11 @@ class Main {
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
 		byte[] encryptedData = encryptor.encrypt(dataToEncrypt); //change to encrypt file
-		System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData) + " Number of bits: " + encryptedData.length * 8);
+		//System.out.println("ENCRYPT_MODE: " + PrintUtils.bytesAsString(encryptedData) + " Number of bits: " + encryptedData.length * 8);
 		//PrintUtils.med(encryptedData);
 		Encryptor e = new Encryptor(DECRYPT_MODE, encryptionKey);
 		byte[] decryptedData = e.decrypt(encryptedData);
-		System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
+		//System.out.println("DECRYPT_MODE: " + PrintUtils.bytesAsString(decryptedData) + " Number of bits: " + decryptedData.length * 8);
 		//PrintUtils.med(decryptedData);
 
 		/* Get password as byte array */
