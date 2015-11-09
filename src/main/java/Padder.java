@@ -23,10 +23,7 @@ class Padder {
 			padding = createPadding(blockSize, bytesToPad);
 		}
 
-		byte[] paddedData = new byte[dataToPad.length + padding.length];
-
-		System.arraycopy(dataToPad, 0, paddedData, 0, dataToPad.length);
-		System.arraycopy(padding, 0, paddedData, dataToPad.length, padding.length);
+		byte[] paddedData = concatArray(dataToPad, padding);
 
 		return paddedData;
 	}
@@ -43,5 +40,20 @@ class Padder {
 		padding[0] = pad;
 
 		return padding;
+	}
+
+	/**
+	 * Concatenate two arrays
+	 * @param first array
+	 * @param second array
+	 * @return byte array with first and second concatenated
+	 */
+	public static byte[] concatArray(byte[] first, byte[] second) {
+		byte[] concat = new byte[first.length + second.length];
+
+		System.arraycopy(first, 0, concat, 0, first.length);
+		System.arraycopy(second, 0, concat, first.length, second.length);
+
+		return concat;
 	}
 }
