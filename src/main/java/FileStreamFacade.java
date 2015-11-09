@@ -61,6 +61,14 @@ class FileStreamFacade {
 		}
 	}
 
+	public void writeHexFile(byte[] dataToWrite) {
+		PrintWriterFacade writer = new PrintWriterFacade(outputFile.getName());
+
+		writer.write(PrintUtils.bytesAsString(dataToWrite));
+
+		writer.close();
+	}
+
 	public void close() {
 		try {
 			this.input.close();

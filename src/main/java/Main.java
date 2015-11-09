@@ -13,7 +13,7 @@ import javax.xml.bind.DatatypeConverter;
 */
 class Main {
 	private static final int STD_BITS = 128;
-	private static final String SUBMISSION_FILE = "/home/conor/work/college/year4/cryptography/submission_data";
+	private static final String SUBMISSION_FILE = "submission_data";
 
 	public static void main(String[] args) {
 		/* Generate Salt and write to file */
@@ -36,8 +36,9 @@ class Main {
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
 		String fileToDecrypt = encryptor.encryptFile(fileNameToEncrypt);
 
-		Encryptor decryptor = new Encryptor(DECRYPT_MODE, encryptionKey, encryptor.getIV());
-		decryptor.decryptFile(fileToDecrypt);
+		/* Decrypt file passing the new file name. Only works when bytes are written, not hex */
+		//Encryptor decryptor = new Encryptor(DECRYPT_MODE, encryptionKey, encryptor.getIV());
+		//decryptor.decryptFile(fileToDecrypt);
 
 		/* Get password as byte array */
 		byte[] password = p.getPassword().getBytes(UTF_8);

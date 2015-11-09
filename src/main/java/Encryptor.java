@@ -77,12 +77,14 @@ class Encryptor {
 			e.printStackTrace();
 		}
 
+		/* check if iv is needed */
 		if(iv == null) {
 			iv = getIntialisationVector();
 		}
 
 		Key cipherKey = new SecretKeySpec(this.key, this.CIPHER_TYPE);
 
+		/* allow for larger key sizes */
 		updateKeyLimit();
 
 		try {
@@ -111,13 +113,22 @@ class Encryptor {
 
 		byte[] encryptedData = executeCipher(dataToEncrypt);
 
-		io.writeFile(encryptedData);
+		/* write bytes to file */
+		//io.writeFile(encryptedData);
+
+		/* write bytes to file as hex */
+		io.writeHexFile(encryptedData);
 
 		io.close();
 
 		return encryptedFileName;
 	}
 
+	/**
+	 * Decrypt the file, resulting file name will be decrypted_fileName
+	 * @param fileName name of the file to decrypt
+	 * @return the name of the decrypted file
+	 */
 	public String decryptFile(String fileName) {
 		String decryptedFileName = String.format("decrypted_%s", fileName);
 		FileStreamFacade io = new FileStreamFacade(fileName, decryptedFileName);
