@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,9 +14,10 @@ import java.io.IOException;
  */
 class FileStreamFacade {
 	File inputFile;
+	File outputFile;
 
 	FileInputStream input;
-	PrintWriterFacade writer;
+	FileOutputStream output;
 
 	/**
 	 * All-args constructor
@@ -24,10 +26,16 @@ class FileStreamFacade {
 	 */
 	public FileStreamFacade(String inputFileName, String outputFileName) {
 		this.inputFile = new File(inputFileName);
-		this.writer = new PrintWriterFacade(outputFileName);
+		this.outputFile = new File(outputFileName);
 
 		try {
 			this.input = new FileInputStream(this.inputFile);
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} 
+		
+		try {
+			this.output = new FileOutputStream(this.outputFile);
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -46,7 +54,11 @@ class FileStreamFacade {
 	}
 
 	public void writeFile(byte[] dataToWrite) {
-		writer.writeLine(PrintUtils.bytesAsString(dataToWrite));
+	try {
+		output.write(dataToWrite);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void close() {
