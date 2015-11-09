@@ -1,8 +1,10 @@
 import java.math.BigInteger;
 
 import static javax.crypto.Cipher.ENCRYPT_MODE;
+import static javax.crypto.Cipher.DECRYPT_MODE;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import javax.xml.bind.DatatypeConverter;
 
 /**
 * Main class to execute code
@@ -22,7 +24,7 @@ class Main {
 		p.setSalt(salt);
 
 		/* Get salted password as bytes */
-		byte[] saltedPassword = p.getSaltPassword().getBytes(UTF_8);
+		byte[] saltedPassword = p.getSaltPassword();
 
 		/* Hash Password and write to file */
 		byte[] encryptionKey = PasswordHasher.hashPassword(saltedPassword);
@@ -32,7 +34,10 @@ class Main {
 
 		/* Create encryptor to encrypt the data */
 		Encryptor encryptor = new Encryptor(ENCRYPT_MODE, encryptionKey);
-		encryptor.encryptFile(fileNameToEncrypt);
+		String fileToDecrypt = encryptor.encryptFile(fileNameToEncrypt);
+
+		Encryptor decryptor = new Encryptor(DECRYPT_MODE, encryptionKey, encryptor.getIV());
+		decryptor.decryptFile(fileToDecrypt);
 
 		/* Get password as byte array */
 		byte[] password = p.getPassword().getBytes(UTF_8);
