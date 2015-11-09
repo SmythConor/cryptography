@@ -68,6 +68,10 @@ class FileStreamFacade {
 			e.printStackTrace();
 		}
 
-		this.writer.close();
+		try {
+			this.output.close(); 
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

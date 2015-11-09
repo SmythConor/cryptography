@@ -118,6 +118,21 @@ class Encryptor {
 		return encryptedFileName;
 	}
 
+	public String decryptFile(String fileName) {
+		String decryptedFileName = String.format("decrypted_%s", fileName);
+		FileStreamFacade io = new FileStreamFacade(fileName, decryptedFileName);
+
+		byte[] dataToDecrypt = io.readFile();
+
+		byte[] decryptedData = executeCipher(dataToDecrypt);
+
+		io.writeFile(decryptedData);
+
+		io.close();
+
+		return decryptedFileName;
+	}
+
 	/**
 	 * Execute cipher on data
 	 * @param data data to be encrypted/decrypted
