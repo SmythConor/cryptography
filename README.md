@@ -2,6 +2,11 @@
 Cryptography Assignments
 
 ##Assignemnt One
-``` 100% ```
+``` 
+100% 
+```
 
 ##Assignment Two
+``` 
+80% 
+```
